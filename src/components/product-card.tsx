@@ -21,7 +21,7 @@ export function Root({ children }: RootProps) {
 }
 
 export function Title({ name }: TitleProps) {
-  return <h2 className="text-xl">{name}</h2>
+  return <h2 className="text-lg font-bold">{name}</h2>
 }
 interface PriceOldProps {
   priceOldInCents: number

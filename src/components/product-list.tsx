@@ -1,33 +1,52 @@
-import type { Product } from '@/@types/product'
-
 import * as ProductCard from './product-card'
 
-interface ColletionProductsProps {
-  products: Product[]
+interface CollectionProductsProps {
+  products: {
+    id: string
+    isNew: boolean
+    priceInCents: number
+    oldPriceInCents: number
+    name: string
+    slug: string
+    description: string
+    category: string
+    discount: number
+    createdAt: Date
+    image: {
+      id: string
+      title: string
+      url: string
+      productId: string
+    }
+  }[]
 }
 
-export function ColletionProducts({ products }: ColletionProductsProps) {
+export function CollectionProducts({ products }: CollectionProductsProps) {
   return (
     <div className="mx-auto mt-10 flex max-w-[1400px] flex-wrap justify-center gap-8">
       {products.map((product) => (
         <ProductCard.Root key={product.id}>
           <ProductCard.CardHover />
-          {product.discountPrice && (
-            <ProductCard.DiscountProduct percentual={product.discountPrice} />
+          {product.discount && (
+            <ProductCard.DiscountProduct percentual={product.discount} />
           )}
-          {product.new && !product.priceOld && <ProductCard.NewProduct />}
-          <ProductCard.Image url={product.imageUrl} alt="Imagem" />
+          {product.isNew && <ProductCard.NewProduct />}
+          <ProductCard.Image url={product.image.url} alt="Imagem" />
           <ProductCard.Content>
             <ProductCard.Title name={product.name} />
             <ProductCard.Description>
               {product.description}
             </ProductCard.Description>
-            <ProductCard.ContentPrice>
-              <ProductCard.Price priceInCents={product.price} />
-              {product.priceOld && (
-                <ProductCard.PriceOld priceOldInCents={product.priceOld} />
-              )}
-            </ProductCard.ContentPrice>
+            <div>
+              <ProductCard.ContentPrice>
+                <ProductCard.Price priceInCents={product.priceInCents} />
+                {product.oldPriceInCents && (
+                  <ProductCard.PriceOld
+                    priceOldInCents={product.oldPriceInCents}
+                  />
+                )}
+              </ProductCard.ContentPrice>
+            </div>
           </ProductCard.Content>
         </ProductCard.Root>
       ))}

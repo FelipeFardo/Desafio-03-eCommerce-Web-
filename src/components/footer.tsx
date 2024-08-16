@@ -15,18 +15,6 @@ export function Footer() {
   )
 }
 
-function Address() {
-  return (
-    <div className="m-10 flex max-w-xs flex-col gap-7">
-      <h3 className="text-2xl font-semibold">Furniro.</h3>
-      <span className="text-gray-500">
-        Rua Alexandre Dumas, 1711 - 6º andar - Chácara Santo Antônio, São Paulo
-        - SP, 04717-004
-      </span>
-    </div>
-  )
-}
-
 function Menu() {
   return (
     <div className="flex flex-row gap-10">
@@ -88,6 +76,18 @@ function Newsletter() {
         </button>
       </div>
       <p className="relative -top-5 text-xs text-red-600">{emailErrorMsg}</p>
+    </div>
+  )
+}
+
+function Address() {
+  return (
+    <div className="m-10 flex max-w-xs flex-col">
+      <h3 className="pb-8 text-2xl font-semibold">Furniro.</h3>
+      <span className="text-gray-400">
+        400 University Drive Suite 200 Coral Gables,
+      </span>
+      <span className="text-gray-400">FL 33134 USA</span>
     </div>
   )
 }
