@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
+import { useParams } from 'react-router-dom'
 
 import { getProductBySlug } from '@/api/get-product-by-slug'
 import { Button } from '@/components/button'
@@ -12,7 +13,7 @@ import { ProductSkeleton } from '@/components/product-skeleton'
 import { cn } from '@/lib/utils'
 
 export function ProductPage() {
-  const productSlug = 'incredible-wooden-towels10'
+  const { productSlug } = useParams<{ productSlug: string }>()
 
   const [imageSelect, setImageSelect] = useState<{
     id: string
@@ -32,7 +33,7 @@ export function ProductPage() {
   const { data: result, isLoading: isLoadingProducts } = useQuery({
     queryKey: ['product', productSlug],
     queryFn: async () => {
-      const result = await getProductBySlug(productSlug)
+      const result = await getProductBySlug(productSlug!)
 
       const colorIdDefault = result.product.colors[0].id
       const sizeIdDefault = result.product.sizes[0].id
@@ -116,13 +117,10 @@ export function ProductPage() {
             <SliceStar />
           </span>
           <span className="ml-2  border-l-2 px-4 text-gray-600">
-            (20 avaliações)
+            5 Customer Review
           </span>
         </div>
-        <p className="mt-4 text-gray-700">
-          Descrição detalhada do produto aqui. É um ótimo produto com várias
-          características e benefícios.
-        </p>
+        <p className="mt-4 text-gray-700">{product?.description}</p>
 
         <div className="mt-4">
           <div className="mb-4">
@@ -165,7 +163,7 @@ export function ProductPage() {
             </div>
           </div>
           <div className="max-w-96">
-            {variantSelect && variantSelect?.quantity > 1 && (
+            {variantSelect && variantSelect?.quantity > 3 && (
               <span className="mb-4 flex w-auto rounded-2xl bg-red-100 p-4 text-sm text-red-700">
                 Produto Indisponível
               </span>
@@ -194,12 +192,18 @@ export function ProductPage() {
         <div className="mt-8 flex flex-col gap-4 border-t-2 border-gray-200 py-8 text-gray-400">
           <span>SKU: {variantSelect?.sku}</span>
           <span>Category: {product?.category.name}</span>
-          <span>Tags: 123 123 123</span>
-          <span className="flex gap-2 ">
+          <span>Tags: {product?.tags.join(', ')}</span>
+          <span className="flex gap-4 ">
             Share:
-            <FakebookBlackIcon />
-            <LinkedinBlackIcon />
-            <TwitterBlackIcon />
+            <button className="flex">
+              <FakebookBlackIcon />
+            </button>
+            <button className="flex">
+              <LinkedinBlackIcon />
+            </button>
+            <button className="flex">
+              <TwitterBlackIcon />
+            </button>
           </span>
         </div>
       </div>

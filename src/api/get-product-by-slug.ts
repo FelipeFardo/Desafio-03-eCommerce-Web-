@@ -12,6 +12,7 @@ interface GetProductBySlugResponse {
     categoryId: string
     discount: number
     createdAt: Date
+    tags: string[]
     category: {
       id: string
       name: string
