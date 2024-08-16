@@ -1,6 +1,6 @@
 export function CollectionProductsSkeleton() {
   return (
-    <div className="mx-auto mt-10 flex max-w-[1400px] flex-wrap justify-center gap-8">
+    <div className="mx-auto mt-10 flex max-w-[1500px] flex-wrap justify-center gap-8">
       {[...Array(12)].map((_, index) => (
         <div key={index} className="animate-pulse">
           <div className="relative">

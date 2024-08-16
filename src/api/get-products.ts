@@ -10,7 +10,7 @@ interface GetProductsResponse {
     id: string
     isNew: boolean
     priceInCents: number
-    oldPriceInCents: number
+    oldPriceInCents: number | null
     name: string
     slug: string
     description: string

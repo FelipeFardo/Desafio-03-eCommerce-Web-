@@ -15,11 +15,12 @@ export function HomePage() {
     searchParams,
     // ,setSearchParams
   ] = useSearchParams()
-  const pageIndex = Number(searchParams.get('p') || 1)
+  const pageIndex = Number(searchParams.get('page') || 1)
   const perPage = Number(searchParams.get('perPage') || 20)
+  const categories = searchParams.get('categories')?.split(',') || []
 
   const { data: result, isLoading: isLoadingProducts } = useQuery({
-    queryKey: ['products', pageIndex, perPage],
+    queryKey: ['products', pageIndex, perPage, categories],
     queryFn: () =>
       getProducts({
         perPage,

@@ -8,7 +8,7 @@ interface RootProps {
 
 function Root({ children }: RootProps) {
   return (
-    <div className="relative mx-auto grid h-[300px] max-w-[1400px] place-items-center overflow-hidden">
+    <div className="relative mx-auto grid h-[300px]  place-items-center overflow-hidden">
       {children}
     </div>
   )

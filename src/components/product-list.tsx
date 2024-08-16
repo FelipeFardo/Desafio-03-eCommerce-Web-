@@ -5,7 +5,7 @@ interface CollectionProductsProps {
     id: string
     isNew: boolean
     priceInCents: number
-    oldPriceInCents: number
+    oldPriceInCents: number | null
     name: string
     slug: string
     description: string
@@ -23,7 +23,7 @@ interface CollectionProductsProps {
 
 export function CollectionProducts({ products }: CollectionProductsProps) {
   return (
-    <div className="mx-auto mt-10 flex max-w-[1400px] flex-wrap justify-center gap-8">
+    <div className="mx-auto mt-10 flex max-w-[1500px] flex-wrap justify-center gap-8">
       {products.map((product) => (
         <ProductCard.Root key={product.id}>
           <ProductCard.CardHover />

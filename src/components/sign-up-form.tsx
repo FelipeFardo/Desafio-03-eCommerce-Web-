@@ -39,7 +39,7 @@ export function SignUpForm() {
           type="text"
           id="name"
           placeholder="Enter your name"
-          className="mt-1 block w-full rounded-2xl border border-gray-300 p-2 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+          className="mt-1   block w-full rounded-2xl border border-gray-300 p-2 text-sm shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
           required
         />
         {errors.name && (
@@ -55,7 +55,7 @@ export function SignUpForm() {
           type="email"
           id="email"
           placeholder=" Enter your email"
-          className="mt-1 block w-full rounded-2xl border border-gray-300 p-2 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+          className="mt-1 block  w-full rounded-2xl border border-gray-300 p-2 text-sm shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
           required
         />
         {errors.email && (
@@ -71,7 +71,7 @@ export function SignUpForm() {
           type="password"
           id="password"
           placeholder=" password"
-          className="mt-1 block w-full rounded-2xl border border-gray-300 p-2 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+          className="mt-1 block w-full rounded-2xl border border-gray-300 p-2 text-sm shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
           required
         />
         {errors.password && (
@@ -87,7 +87,7 @@ export function SignUpForm() {
           type="password"
           id="password"
           placeholder="password"
-          className="mt-1 block w-full rounded-2xl border border-gray-300 p-2 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+          className="mt-1 block w-full rounded-2xl border border-gray-300 p-2 text-sm shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
           required
         />
         {errors.password && (
@@ -96,7 +96,7 @@ export function SignUpForm() {
       </div>
       <button
         type="submit"
-        className="w-full rounded-full bg-lime-900 px-4 py-2 text-white hover:bg-lime-950 focus:outline-none focus:ring-2 focus:ring-lime-950 focus:ring-offset-2"
+        className="w-full rounded-full bg-lime-900 px-4 py-2 text-sm text-white hover:bg-lime-950 focus:outline-none focus:ring-2 focus:ring-lime-950 focus:ring-offset-2"
       >
         Login
       </button>

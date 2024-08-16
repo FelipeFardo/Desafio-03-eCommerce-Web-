@@ -1,24 +1,23 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
+
+import { authenticateUser } from '@/api/authenticate-user'
 
 const LoginSchema = z.object({
   email: z.string().email({ message: 'Email inválido' }),
-  password: z
-    .string()
-    .min(6, { message: 'A senha deve ter pelo menos 6 caracteres' }),
+  password: z.string(),
 })
 type LoginFormData = z.infer<typeof LoginSchema>
 
 export function SignInForm() {
+  const navigate = useNavigate()
   const [authMessage, setAuthMessage] = useState<{
     message: string
     type: 'success' | 'error'
-  } | null>({
-    message: 'Login success',
-    type: 'success',
-  })
+  } | null>(null)
   const {
     register,
     handleSubmit,
@@ -27,14 +26,34 @@ export function SignInForm() {
     resolver: zodResolver(LoginSchema),
   })
 
-  const onSubmit = (data) => {
-    console.log(data)
+  const onSubmit = async ({ email, password }: LoginFormData) => {
+    try {
+      const { accessToken } = await authenticateUser({
+        email,
+        password,
+      })
+
+      console.log(accessToken)
+      localStorage.setItem('token', accessToken)
+      setAuthMessage({
+        message: 'Login Successfuly',
+        type: 'success',
+      })
+      setTimeout(() => {
+        navigate('/')
+      }, 2000)
+    } catch (e) {
+      setAuthMessage({
+        message: 'Invalid credentials',
+        type: 'error',
+      })
+    }
   }
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       {authMessage?.type === 'error' && (
         <div
-          className="text-ree-700 mb-4 rounded-2xl bg-red-100 p-4 text-sm"
+          className="mb-4 rounded-2xl bg-red-100 p-4 text-sm text-red-700"
           role="alert"
         >
           {authMessage.message}
@@ -57,7 +76,7 @@ export function SignInForm() {
           type="email"
           id="email"
           placeholder=" Enter your email"
-          className="mt-1 block w-full rounded-2xl border border-gray-300 p-2 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+          className="mt-1  block w-full rounded-2xl border border-gray-300 p-2 text-sm shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
           required
         />
         {errors.email && (
@@ -73,7 +92,7 @@ export function SignInForm() {
           type="password"
           id="password"
           placeholder=" password"
-          className="mt-1 block w-full rounded-2xl border border-gray-300 p-2 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+          className="mt-1 block w-full rounded-2xl border border-gray-300 p-2 text-sm shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
           required
         />
         {errors.password && (

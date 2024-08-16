@@ -4,7 +4,7 @@ import loginImage from '@/assets/images/520fab60716f712257d7f6a7fc48a42f.jpeg'
 import { AppleIcon } from '@/components/icons/apple'
 import { GoogleIcon } from '@/components/icons/google'
 import { SignInForm } from '@/components/sign-in-form'
-import { SignUpForm } from '@/components/sign-up'
+import { SignUpForm } from '@/components/sign-up-form'
 
 export function Auth() {
   const [isRegister, setIsRegister] = useState<boolean>(false)

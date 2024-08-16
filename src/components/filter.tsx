@@ -14,7 +14,7 @@ interface RootProps {
 
 function Root({ children }: RootProps) {
   return (
-    <div className="mx-auto flex h-[100px] max-w-[1400px] items-center bg-[#F9F1E7]">
+    <div className="mx-auto flex h-[100px] items-center bg-[#F9F1E7]">
       {children}
     </div>
   )
