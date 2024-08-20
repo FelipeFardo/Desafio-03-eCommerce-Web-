@@ -1,11 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import toast from 'react-hot-toast'
 
 interface CartItem {
-  productId: string
+  productSlug: string
   sku: string
   name: string
+  color: string
+  size: string
   priceInCents: number
   imageUrl: string
+  quantityAvailable: number
   quantity: number
   subTotal: number
 }
@@ -16,29 +20,8 @@ interface CartState {
 }
 
 const initialState: CartState = {
-  items: [
-    {
-      productId: 'b424cc33-d0b8-4046-b269-e54e4a1fa5dd',
-      imageUrl:
-        'https://pub-9448e6c9570e405b8072625bd2387965.r2.dev/product_01.png',
-      sku: 'SKU053518',
-      name: 'Shoes',
-      priceInCents: 333,
-      quantity: 2,
-      subTotal: 666,
-    },
-    {
-      productId: 'b424cc33-d0b8-4046-b269-e54e4a1fa5dd',
-      imageUrl:
-        'https://pub-9448e6c9570e405b8072625bd2387965.r2.dev/product_01.png',
-      sku: 'SKU053518',
-      name: 'Shoes',
-      priceInCents: 333,
-      quantity: 2,
-      subTotal: 666,
-    },
-  ],
-  total: 666,
+  items: [],
+  total: 0,
 }
 
 const cartSlice = createSlice({
@@ -47,23 +30,64 @@ const cartSlice = createSlice({
   reducers: {
     addToCart: (
       state,
-      action: PayloadAction<Omit<CartItem, 'quantity' | 'subTotal'>>,
+      action: PayloadAction<{
+        productSlug: string
+        sku: string
+        name: string
+        color: string
+        size: string
+        quantityAvailable: number
+        priceInCents: number
+        imageUrl: string
+        quantity: number
+      }>,
     ) => {
       const existingItem = state.items.find(
         (item) => item.sku === action.payload.sku,
       )
+
       if (existingItem) {
-        existingItem.quantity += 1
-      } else {
-        state.items.push({
-          ...action.payload,
-          quantity: 1,
-          subTotal: action.payload.priceInCents,
-        })
+        if (
+          existingItem.quantityAvailable <
+          action.payload.quantity + existingItem.quantity
+        ) {
+          toast.error(
+            'Quantity not available, this item is already in your cart.',
+          )
+          return
+        }
+
+        existingItem.quantity += action.payload.quantity
+
+        existingItem.subTotal +=
+          action.payload.quantity * action.payload.priceInCents
+        state.total += action.payload.quantity * action.payload.priceInCents
+        toast.success(
+          `${action.payload.name} has been successfully added to your cart!`,
+        )
+        return
       }
+
+      state.items.push({
+        ...action.payload,
+        subTotal: action.payload.quantity * action.payload.priceInCents,
+      })
+
+      state.total += action.payload.quantity * action.payload.priceInCents
+
+      toast.success(
+        `${action.payload.name} has been successfully added to your cart!`,
+      )
     },
-    removeFromCart: (state, action: PayloadAction<string>) => {
-      state.items = state.items.filter((item) => item.sku !== action.payload)
+    removeFromCart: (state, action: PayloadAction<{ sku: string }>) => {
+      const existingItem = state.items.find(
+        (item) => item.sku === action.payload.sku,
+      )
+      state.total -= existingItem?.subTotal || state.total
+
+      state.items = state.items.filter(
+        (item) => item.sku !== action.payload.sku,
+      )
     },
     updateQuantity: (
       state,

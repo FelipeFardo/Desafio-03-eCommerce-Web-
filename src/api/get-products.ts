@@ -1,8 +1,10 @@
 import { api } from './api-client'
 
 interface GetProductRequest {
-  pageIndex: number
-  perPage: number
+  pageIndex?: number
+  perPage?: number
+  shortBy?: 'asc' | 'desc'
+  categories: string
 }
 
 interface GetProductsResponse {
@@ -34,11 +36,15 @@ interface GetProductsResponse {
 export async function getProducts({
   pageIndex = 1,
   perPage = 20,
+  categories,
+  shortBy,
 }: GetProductRequest) {
   const response = await api.get<GetProductsResponse>('/products', {
     params: {
       pageIndex,
       perPage,
+      categories,
+      shortBy,
     },
   })
 

@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import { formatMoney } from '../ultis/formatMoney'
 import { CompareIcon } from './icons/compare'
@@ -14,7 +15,7 @@ interface RootProps {
 
 export function Root({ children }: RootProps) {
   return (
-    <div className="relative h-[446px] w-[17rem] max-w-[300px] bg-[#F4F5F7]">
+    <div className="relative flex min-h-[446px] w-[17rem] max-w-[300px] flex-col bg-[#F4F5F7]">
       {children}
     </div>
   )
@@ -66,20 +67,37 @@ interface ContentPriceProps {
 }
 
 export function ContentPrice({ children }: ContentPriceProps) {
-  return <div className="inline-block">{children}</div>
+  return <div className="flex items-end justify-between">{children}</div>
 }
 interface ContentProps {
   children: ReactNode
 }
 
 export function Content({ children }: ContentProps) {
-  return <div className="m-4 flex flex-col gap-2">{children}</div>
+  return (
+    <div className="gap- m-4 flex  h-full flex-col justify-between">
+      {children}
+    </div>
+  )
 }
 
-export function CardHover() {
+interface CardHoverProps {
+  productSlug: string
+}
+
+export function CardHover({ productSlug }: CardHoverProps) {
+  const navigate = useNavigate()
+
+  const handleButtonClick = () => {
+    navigate(`/product/${productSlug}`, { unstable_viewTransition: true })
+    window.scrollTo(0, 0)
+  }
   return (
-    <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-8 bg-black bg-opacity-50 text-white opacity-0 transition-opacity duration-300 ease-in-out hover:opacity-100">
-      <button className="hover:bg-color-hover cursor-pointer border bg-white px-12 py-2.5 text-lg text-[#B88E2F] transition-colors duration-300 ease-in-out">
+    <div className="absolute inset-0 flex flex-col  items-center justify-center gap-8 bg-black bg-opacity-50 text-white opacity-0 transition-opacity duration-300 ease-in-out hover:opacity-100 group-hover:block">
+      <button
+        onClick={handleButtonClick}
+        className="hover:bg-color-hover cursor-pointer border bg-white px-12 py-2.5 text-lg text-[#B88E2F] transition-colors duration-300 ease-in-out"
+      >
         See Details
       </button>
       <div className="flex gap-5">

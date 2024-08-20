@@ -1,5 +1,7 @@
 import { CircleX, ShoppingCart } from 'lucide-react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+
+import { removeFromCart } from '@/cart/cart-slice'
 
 import { RootState } from '../cart/store'
 import {
@@ -12,7 +14,15 @@ import {
 
 export function Cart() {
   const { items, total } = useSelector((state: RootState) => state.cart)
+  const dispatch = useDispatch()
 
+  function removeItemToCart(sku: string) {
+    dispatch(
+      removeFromCart({
+        sku,
+      }),
+    )
+  }
   return (
     <Sheet>
       <SheetTrigger>
@@ -39,19 +49,19 @@ export function Cart() {
                       alt={item.name}
                       className="rounded-2xl"
                     />
-                    <div className="space-y-2 p-4 pl-8">
+                    <div className="flex flex-col justify-center space-y-2 pl-8">
                       <h3 className="text-lg font-medium">{item.name}</h3>
                       <h4 className="space-x-2">
                         <span>{item.quantity} </span>
                         <span>x</span>
                         <span className="pl-4 text-yellow-600">
-                          {item.priceInCents}
+                          R$ {item.priceInCents}
                         </span>
                       </h4>
                     </div>
                   </div>
                   <div className="px-4 py-1">
-                    <button>
+                    <button onClick={() => removeItemToCart(item.sku)}>
                       <CircleX />
                     </button>
                   </div>
@@ -62,7 +72,7 @@ export function Cart() {
           <div>
             <div className="flex justify-between pb-3">
               <h3>Sub total</h3>
-              <span>RS {total}</span>
+              <span>RS {total.toFixed(2)}</span>
             </div>
 
             <nav className="border-1 flex justify-between space-x-3 border-t py-4">

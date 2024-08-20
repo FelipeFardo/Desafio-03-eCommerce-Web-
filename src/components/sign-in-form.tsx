@@ -6,11 +6,11 @@ import { z } from 'zod'
 
 import { authenticateUser } from '@/api/authenticate-user'
 
-const LoginSchema = z.object({
+const SignInSchema = z.object({
   email: z.string().email({ message: 'Email inválido' }),
   password: z.string(),
 })
-type LoginFormData = z.infer<typeof LoginSchema>
+type SignInFormData = z.infer<typeof SignInSchema>
 
 export function SignInForm() {
   const navigate = useNavigate()
@@ -22,11 +22,11 @@ export function SignInForm() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginFormData>({
-    resolver: zodResolver(LoginSchema),
+  } = useForm<SignInFormData>({
+    resolver: zodResolver(SignInSchema),
   })
 
-  const onSubmit = async ({ email, password }: LoginFormData) => {
+  const onSubmit = async ({ email, password }: SignInFormData) => {
     try {
       const { accessToken } = await authenticateUser({
         email,

@@ -26,7 +26,7 @@ export function CollectionProducts({ products }: CollectionProductsProps) {
     <div className="mx-auto mt-10 flex max-w-[1500px] flex-wrap justify-center gap-8">
       {products.map((product) => (
         <ProductCard.Root key={product.id}>
-          <ProductCard.CardHover />
+          <ProductCard.CardHover productSlug={product.slug} />
           {product.discount && (
             <ProductCard.DiscountProduct percentual={product.discount} />
           )}

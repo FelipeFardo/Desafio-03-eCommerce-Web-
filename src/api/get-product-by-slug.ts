@@ -16,6 +16,7 @@ interface GetProductBySlugResponse {
     category: {
       id: string
       name: string
+      slug: string
     }
     colors: {
       id: string

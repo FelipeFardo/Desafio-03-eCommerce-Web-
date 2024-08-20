@@ -1,7 +1,12 @@
-export function CollectionProductsSkeleton() {
+interface CollectionProductsSkeletonProps {
+  qtd?: number
+}
+export function CollectionProductsSkeleton({
+  qtd = 12,
+}: CollectionProductsSkeletonProps) {
   return (
     <div className="mx-auto mt-10 flex max-w-[1500px] flex-wrap justify-center gap-8">
-      {[...Array(12)].map((_, index) => (
+      {[...Array(qtd)].map((_, index) => (
         <div key={index} className="animate-pulse">
           <div className="relative">
             <div className="h-64 w-64 rounded-lg bg-gray-300"></div>
