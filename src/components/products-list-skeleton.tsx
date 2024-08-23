@@ -9,7 +9,7 @@ export function CollectionProductsSkeleton({
       {[...Array(qtd)].map((_, index) => (
         <div
           key={index}
-          className="relative flex w-[17rem] max-w-[300px] flex-col "
+          className="relative flex w-[17rem] max-w-[300px] animate-pulse flex-col "
         >
           <div className="relative">
             <div className="h-64 w-64 rounded-lg bg-gray-300"></div>
