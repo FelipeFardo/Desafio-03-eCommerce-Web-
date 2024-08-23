@@ -32,8 +32,10 @@ export function ProductHome() {
 
   return (
     <>
-      {isLoadingProducts && <CollectionProductsSkeleton qtd={perPage} />}
-      {products && <CollectionProducts products={products} />}
+      <div className="mx-auto mt-10 flex max-w-[1500px] flex-wrap justify-center gap-8">
+        {isLoadingProducts && <CollectionProductsSkeleton qtd={perPage} />}
+        {products && <CollectionProducts products={products} />}
+      </div>
     </>
   )
 }

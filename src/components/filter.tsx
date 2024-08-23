@@ -44,6 +44,7 @@ function FilterDetails() {
       categories.push(slug)
       const newCategories = categories.join(',')
       prev.set('categories', newCategories)
+      prev.delete('pageIndex')
       return prev
     })
   }
@@ -55,6 +56,7 @@ function FilterDetails() {
       const newCategories = categories.filter((category) => category !== slug)
       if (newCategories.length === 0) prev.delete('categories')
       else prev.set('categories', newCategories.join(','))
+      prev.delete('pageIndex')
       return prev
     })
   }
@@ -122,8 +124,8 @@ function ShowResultMeta() {
   })
 
   const initialIndex = (pageIndex - 1) * perPage + 1
-  const finishiIndex = initialIndex + (result?.products.length || 16 - 2)
-  const totalCount = result?.meta.totalCount
+  const finishiIndex = initialIndex + (result?.products.length || 16) - 1
+  const totalCount = result?.meta.totalCount || 50
 
   return (
     <div className="flex items-center  border-l-2 border-gray-400 px-4">
@@ -196,7 +198,7 @@ function ShortBy() {
   return (
     <div className="flex items-center space-x-3">
       <label htmlFor="shortBy" className="text-sm text-gray-700">
-        Sort By:
+        Short By:
       </label>
       <select
         id="shortBy"

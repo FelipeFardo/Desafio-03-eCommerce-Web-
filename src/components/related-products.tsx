@@ -8,15 +8,20 @@ import { CollectionProductsSkeleton } from './products-list-skeleton'
 interface RelatedProductsProps {
   category: string
   pageIndex: number
+  perPage: number
 }
-export function RelatedProducts({ category, pageIndex }: RelatedProductsProps) {
+export function RelatedProducts({
+  category,
+  pageIndex,
+  perPage,
+}: RelatedProductsProps) {
   const { data: result, isLoading: isLoadingProducts } = useQuery({
-    queryKey: ['productsByCategory', category, pageIndex],
+    queryKey: ['productsByCategory', category, pageIndex, perPage],
     queryFn: async () => {
       return await getProducts({
         categories: category,
-        perPage: 4,
         pageIndex,
+        perPage,
       })
     },
   })
@@ -25,7 +30,7 @@ export function RelatedProducts({ category, pageIndex }: RelatedProductsProps) {
 
   return (
     <>
-      {isLoadingProducts && <CollectionProductsSkeleton qtd={4} />}
+      {isLoadingProducts && <CollectionProductsSkeleton qtd={perPage} />}
       {products && <CollectionProducts products={result?.products} />}
     </>
   )

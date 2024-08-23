@@ -12,7 +12,6 @@ import {
   Sheet,
   SheetContent,
   SheetHeader,
-  SheetOverlay,
   SheetTitle,
   SheetTrigger,
 } from './cart-sheet'
@@ -48,8 +47,6 @@ export function Cart() {
       <SheetTrigger>
         <ShoppingCart />
       </SheetTrigger>
-      <SheetOverlay className="data-[state=open]:animate-fadeIn fixed inset-0  bg-black/50 backdrop-blur-sm" />
-
       <SheetContent>
         <SheetHeader>
           <SheetTitle className="w-60 border-b pb-4 pt-2 text-xl">

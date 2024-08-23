@@ -34,15 +34,15 @@ export function PaginationHome() {
     })
   }
 
-  const pages = Math.ceil(result?.meta.totalCount || 50 / perPage) || 1
+  const pages = Math.ceil((result?.meta.totalCount || 50) / perPage)
 
   return (
     <>
       {isLoadingProducts && (
         <Pagination.Root>
-          <Pagination.Button>1</Pagination.Button>
-          <Pagination.Button active={true}>2</Pagination.Button>
-          <Pagination.Button>3</Pagination.Button>
+          <Pagination.Button>{pageIndex - 1}</Pagination.Button>
+          <Pagination.Button active={true}>{pageIndex}</Pagination.Button>
+          <Pagination.Button>{pageIndex + 1}</Pagination.Button>
           <Pagination.Next />
         </Pagination.Root>
       )}
@@ -56,13 +56,13 @@ export function PaginationHome() {
           </Pagination.Button>
           <Pagination.Button active={true}>{pageIndex}</Pagination.Button>
           <Pagination.Button
-            disabled={pages <= pageIndex + 1}
+            disabled={pages < pageIndex + 1}
             onClick={() => handlePage(pageIndex + 1)}
           >
             {pageIndex + 1}
           </Pagination.Button>
           <Pagination.Next
-            disabled={pages <= pageIndex + 1}
+            disabled={pages < pageIndex + 1}
             onClick={() => handlePage(pageIndex + 1)}
           />
         </Pagination.Root>

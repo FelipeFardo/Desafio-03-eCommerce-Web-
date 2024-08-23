@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import { getProductBySlug } from '@/api/get-product-by-slug'
 import { Product } from '@/components/product'
@@ -9,9 +9,10 @@ import { RelatedProducts } from '@/components/related-products'
 
 export function ProductPage() {
   const [showMore, setShowMore] = useState(false)
+  const navigate = useNavigate()
 
   const { productSlug } = useParams<{ productSlug: string }>()
-  const { data: result, isLoading: isLoadingProducts } = useQuery({
+  const { data: result, isLoading: isLoadingProduct } = useQuery({
     queryKey: ['product', productSlug],
     queryFn: async () => {
       return await getProductBySlug(productSlug!)
@@ -33,10 +34,23 @@ export function ProductPage() {
         <h1 className="flex justify-center text-2xl font-medium">
           Related Products
         </h1>
-        {isLoadingProducts && <CollectionProductsSkeleton qtd={4} />}
-        {product?.category && (
-          <RelatedProducts category={product?.category.slug} pageIndex={1} />
-        )}
+        <div className="mx-auto mt-10 flex max-w-[1400px] flex-wrap justify-center gap-8">
+          {isLoadingProduct && <CollectionProductsSkeleton qtd={4} />}
+          {product?.category && (
+            <RelatedProducts
+              pageIndex={1}
+              category={product?.category.slug}
+              perPage={4}
+            />
+          )}
+          {showMore && product?.category && (
+            <RelatedProducts
+              pageIndex={2}
+              category={product?.category.slug}
+              perPage={4}
+            />
+          )}
+        </div>
         {!showMore && (
           <button
             onClick={() => setShowMore(true)}
@@ -47,7 +61,15 @@ export function ProductPage() {
         )}
 
         {showMore && product?.category && (
-          <RelatedProducts category={product?.category.slug} pageIndex={2} />
+          <button
+            onClick={() => {
+              navigate(`/?categories=${product?.category.slug}`)
+              window.scrollTo(0, 0)
+            }}
+            className="m-8 mx-auto border-2 border-yellow-900 px-16 py-2 text-yellow-900"
+          >
+            Show More
+          </button>
         )}
       </div>
     </>
