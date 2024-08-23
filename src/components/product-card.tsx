@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { formatMoney } from '../ultis/formatMoney'
+import { formatMoney } from '../utis/formatMoney'
 import { CompareIcon } from './icons/compare'
 import { HeartIcon } from './icons/heart'
 

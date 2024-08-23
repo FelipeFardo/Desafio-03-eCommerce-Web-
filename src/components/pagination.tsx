@@ -24,7 +24,10 @@ const BaseButton = ({ className, children, ...props }: BaseButtonProps) => (
 
 const Button = ({ active, children, ...props }: NumberedButtonProps) => (
   <BaseButton
-    className={cn('h-12 w-12', active && 'bg-[#B88E2F] text-white')}
+    className={cn(
+      'h-12 w-12 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-[#F9F1E7] disabled:hover:text-black  ',
+      active && 'bg-[#B88E2F] text-white',
+    )}
     {...props}
   >
     {children}
@@ -32,7 +35,11 @@ const Button = ({ active, children, ...props }: NumberedButtonProps) => (
 )
 
 const Next = (props: BaseButtonProps) => (
-  <BaseButton className="h-15 w-24" {...props}>
+  <BaseButton
+    className="h-15 w-24 disabled:cursor-not-allowed
+    disabled:opacity-50 disabled:hover:bg-[#F9F1E7] disabled:hover:text-black "
+    {...props}
+  >
     Next
   </BaseButton>
 )

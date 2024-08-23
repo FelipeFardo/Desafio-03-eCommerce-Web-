@@ -17,6 +17,6 @@ export async function authenticateUser({
     email,
     password,
   })
-  console.log(response.data)
+
   return response.data
 }

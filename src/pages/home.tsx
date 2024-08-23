@@ -1,35 +1,11 @@
-import { useQuery } from '@tanstack/react-query'
-import { useSearchParams } from 'react-router-dom'
-
-import { getProducts } from '@/api/get-products'
 import bannerImage from '@/assets/images/banner.jpeg'
 import * as Banner from '@/components/banner'
 import { BannerCertificates } from '@/components/banner-certificates'
 import * as FilterComponent from '@/components/filter'
-import * as Pagination from '@/components/pagination'
-import { CollectionProducts } from '@/components/product-list'
-import { CollectionProductsSkeleton } from '@/components/products-list-skeleton'
+import { PaginationHome } from '@/components/pagination-home'
+import { ProductHome } from '@/components/product-home'
 
 export function HomePage() {
-  const [
-    searchParams,
-    // ,setSearchParams
-  ] = useSearchParams()
-  const pageIndex = Number(searchParams.get('page') || 1)
-  const perPage = Number(searchParams.get('perPage') || 20)
-  const categories = searchParams.get('categories')?.split(',') || []
-
-  const { data: result, isLoading: isLoadingProducts } = useQuery({
-    queryKey: ['products', pageIndex, perPage, categories],
-    queryFn: () =>
-      getProducts({
-        perPage,
-        pageIndex,
-      }),
-  })
-
-  const products = result?.products
-
   return (
     <>
       <Banner.Root>
@@ -50,14 +26,8 @@ export function HomePage() {
           <FilterComponent.ItemsPerPage />
         </FilterComponent.Content>
       </FilterComponent.Root>
-      {isLoadingProducts && <CollectionProductsSkeleton />}
-      {products && <CollectionProducts products={products} />}
-      <Pagination.Root>
-        <Pagination.Button>2</Pagination.Button>
-        <Pagination.Button>3</Pagination.Button>
-        <Pagination.Button>4</Pagination.Button>
-        <Pagination.Next />
-      </Pagination.Root>
+      <ProductHome />
+      <PaginationHome />
       <BannerCertificates />
     </>
   )

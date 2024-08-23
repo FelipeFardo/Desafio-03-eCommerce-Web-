@@ -1,12 +1,12 @@
-import { ChevronDown, SlidersHorizontal } from 'lucide-react'
-import { type ReactNode, useState } from 'react'
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
+import { useQuery } from '@tanstack/react-query'
+import { CheckIcon, SlidersHorizontal } from 'lucide-react'
+import { type ReactNode } from 'react'
+import React from 'react'
+import { useSearchParams } from 'react-router-dom'
 
-export type Filters =
-  | 'default'
-  | 'price-asc'
-  | 'price-desc'
-  | 'name-asc'
-  | 'name-desc'
+import { getCategories } from '@/api/get-categories'
+import { getProducts } from '@/api/get-products'
 
 interface RootProps {
   children: ReactNode
@@ -14,9 +14,7 @@ interface RootProps {
 
 function Root({ children }: RootProps) {
   return (
-    <div className="mx-auto flex h-[100px] items-center bg-[#F9F1E7]">
-      {children}
-    </div>
+    <div className="flex h-[100px] items-center  bg-[#F9F1E7]">{children}</div>
   )
 }
 
@@ -26,59 +24,139 @@ interface ContentProps {
 
 function Content({ children }: ContentProps) {
   return (
-    <div className="mx-auto flex w-[90%] flex-wrap justify-between">
+    <div className="mx-auto flex w-[90%] flex-wrap justify-center gap-3 lg:justify-between ">
       {children}
     </div>
   )
 }
 
 function FilterDetails() {
-  const options = [
-    { value: 'all', label: 'Filter' },
-    { value: 'price-asc', label: 'Preço: Menor para Maior' },
-    { value: 'price-desc', label: 'Preço: Maior para Menor' },
-    { value: 'name-asc', label: 'Nome: A - Z' },
-    { value: 'name-desc', label: 'Nome: Z - A' },
-  ]
+  const [searchParams, setSearchParams] = useSearchParams()
+  const categoriesUrl = searchParams.get('categories')?.split(',') || []
+
+  const { data: result } = useQuery({
+    queryKey: ['categories'],
+    queryFn: () => getCategories(),
+  })
+  function includeCategory(slug: string) {
+    setSearchParams((prev) => {
+      const categories = prev.get('categories')?.split(',') || []
+      categories.push(slug)
+      const newCategories = categories.join(',')
+      prev.set('categories', newCategories)
+      return prev
+    })
+  }
+
+  function removeCategory(slug: string) {
+    setSearchParams((prev) => {
+      const categories = prev.get('categories')?.split(',')
+      if (!categories) return prev
+      const newCategories = categories.filter((category) => category !== slug)
+      if (newCategories.length === 0) prev.delete('categories')
+      else prev.set('categories', newCategories.join(','))
+      return prev
+    })
+  }
+  function handleCategory(slug: string) {
+    if (categoriesUrl.includes(slug)) removeCategory(slug)
+    else includeCategory(slug)
+  }
+  const categories = result?.categories
 
   return (
-    <div className="flex flex-wrap items-center justify-center space-x-4">
-      <div className="relative inline-block">
-        <label htmlFor="filter-select" className="sr-only">
+    <>
+      <DropdownMenu.Root>
+        <DropdownMenu.Trigger className="flex items-center gap-4">
+          <SlidersHorizontal className="  pointer-events-none  transform text-gray-500 " />
           Filter
-        </label>
-        <div className="relative">
-          <SlidersHorizontal className="pointer-events-none absolute left-3 top-1/2  -translate-y-1/2  transform text-gray-500" />
-          <select
-            id="filter-select"
-            className="block w-full appearance-none rounded-lg  bg-transparent py-2 pl-10 pr-8 text-base transition focus:border-yellow-900 focus:outline-none focus:ring-2 focus:ring-yellow-900"
-          >
-            <option value="" disabled>
-              Selecione um filtro
-            </option>
-            {options.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-            <ChevronDown />
-          </div>
-        </div>
-      </div>
+          <ShowResultMeta />
+        </DropdownMenu.Trigger>
 
-      <div className="text-medim ">Showing 1-20 of 200 results</div>
+        <DropdownMenu.Portal>
+          <DropdownMenu.Content className="mx-16 border-2 border-yellow-900 bg-white p-4">
+            <DropdownMenu.Group>
+              {categories &&
+                categories.map((category) => (
+                  <DropdownMenu.CheckboxItem
+                    key={category.name}
+                    className="text-violet  data-[disabled]:text-mauve8 data-[highlighted]:bg-violet9 data-[highlighted]:text-violet1 text-md relative flex h-[25px] select-none items-center rounded-[3px] px-[5px] pl-[25px] leading-none outline-none data-[disabled]:pointer-events-none"
+                    checked={categoriesUrl.includes(category.slug)}
+                    onCheckedChange={() => handleCategory(category.slug)}
+                  >
+                    <DropdownMenu.ItemIndicator className="absolute left-0 inline-flex w-[20px] items-center justify-center">
+                      <CheckIcon />
+                    </DropdownMenu.ItemIndicator>
+                    {category.name}
+                  </DropdownMenu.CheckboxItem>
+                ))}
+            </DropdownMenu.Group>
+            <DropdownMenu.Arrow />
+          </DropdownMenu.Content>
+        </DropdownMenu.Portal>
+      </DropdownMenu.Root>
+    </>
+  )
+}
+
+function ShowResultMeta() {
+  const [searchParams] = useSearchParams()
+  const pageIndex = Number(searchParams.get('pageIndex') || 1)
+  const perPage = Number(searchParams.get('perPage') || 16)
+  const shortByParam = searchParams.get('shortBy')
+
+  const shortBy: 'asc' | 'desc' | 'default' =
+    shortByParam === 'asc' || shortByParam === 'desc' ? shortByParam : 'default'
+
+  const categories = searchParams.get('categories') || null
+
+  const { data: result } = useQuery({
+    queryKey: ['products', pageIndex, perPage, categories, shortBy],
+    queryFn: () =>
+      getProducts({
+        perPage,
+        pageIndex,
+        categories,
+        shortBy,
+      }),
+  })
+
+  const initialIndex = (pageIndex - 1) * perPage + 1
+  const finishiIndex = initialIndex + (result?.products.length || 16 - 2)
+  const totalCount = result?.meta.totalCount
+
+  return (
+    <div className="flex items-center  border-l-2 border-gray-400 px-4">
+      Showing
+      <span className="px-1">{initialIndex}</span>-
+      <span className="px-1">{finishiIndex}</span>
+      of
+      <span className="px-1">{totalCount} results</span>
     </div>
   )
 }
 
 function ItemsPerPage() {
-  const [itemsPerPage, setItemsPerPage] = useState(10)
+  const [searchParams, setSearchParams] = useSearchParams()
 
-  const handleChange = (e) => {
-    const value = parseInt(e.target.value, 10)
-    setItemsPerPage(value)
+  const perPage =
+    Number(searchParams.get('perPage')) > 50
+      ? '50'
+      : searchParams.get('perPage') || '16'
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseInt(e.target.value, 10) || 1
+    if (value > 50) {
+      setSearchParams((prev) => {
+        prev.set('perPage', perPage)
+        return prev
+      })
+    } else {
+      setSearchParams((prev) => {
+        prev.set('perPage', String(value))
+        return prev
+      })
+    }
   }
 
   return (
@@ -91,41 +169,45 @@ function ItemsPerPage() {
         id="itemsPerPage"
         name="itemsPerPage"
         min="1"
-        max="100"
-        value={itemsPerPage}
+        max="50"
+        value={perPage || 16}
         onChange={handleChange}
         className="w-16 rounded-md border border-gray-300 px-2 py-1 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
-      <CategorySelect />
+      <ShortBy />
     </div>
   )
 }
 
-function CategorySelect() {
-  const [itemsPerPage, setItemsPerPage] = useState(10)
+function ShortBy() {
+  const [searchParams, setSearchParams] = useSearchParams()
 
-  const handleChange = (e) => {
-    const value = parseInt(e.target.value, 10)
-    setItemsPerPage(value)
+  const shortBy = searchParams.get('shortBy')
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value
+
+    setSearchParams((prev) => {
+      console.log(value)
+      if (value === 'default') prev.delete('shortBy')
+      else prev.set('shortBy', value)
+      return prev
+    })
   }
-
   return (
-    <div className="flex items-center space-x-2">
-      <label htmlFor="itemsPerPage" className="text-sm ">
+    <div className="flex items-center space-x-3">
+      <label htmlFor="shortBy" className="text-sm text-gray-700">
         Sort By:
       </label>
       <select
-        id="itemsPerPage"
-        name="itemsPerPage"
-        value={itemsPerPage}
+        id="shortBy"
+        name="shortBy"
+        value={shortBy || 'default'}
         onChange={handleChange}
-        className="w-20 rounded-md border border-gray-300 bg-white px-2 py-1 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-44 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 shadow-sm transition duration-150 ease-in-out focus:border-yellow-900 focus:outline-none focus:ring-2 focus:ring-yellow-900"
       >
-        <option value="5">5</option>
-        <option value="10">10</option>
-        <option value="20">20</option>
-        <option value="50">50</option>
-        <option value="100">100</option>
+        <option value="default">Default</option>
+        <option value="asc">Price Ascending</option>
+        <option value="desc">Price Descending</option>
       </select>
     </div>
   )

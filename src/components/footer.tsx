@@ -1,16 +1,18 @@
 import { useState } from 'react'
 
-import { validEmail } from '@/ultis/validEmail'
+import { validEmail } from '@/utis/validEmail'
 
 import { Button } from './button'
 
 export function Footer() {
   return (
-    <footer className="mx-auto flex max-w-screen-xl flex-wrap justify-around">
-      <Address />
-      <Menu />
-      <Newsletter />
-      <Copyright />
+    <footer className="mx-auto flex w-full  flex-wrap justify-center  border-t-2 border-gray-100">
+      <div className="mx-auto flex flex-wrap justify-around">
+        <Address />
+        <Menu />
+        <Newsletter />
+        <Copyright />
+      </div>
     </footer>
   )
 }

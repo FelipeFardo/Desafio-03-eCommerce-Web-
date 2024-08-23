@@ -12,6 +12,7 @@ import { SliceStar } from '@/components/icons/slice-start'
 import { Star } from '@/components/icons/star'
 import { TwitterBlackIcon } from '@/components/icons/twitter-black'
 import { ProductImages } from '@/components/product-images'
+import { useSheetCart } from '@/contexts/sheet-cart'
 import { cn } from '@/lib/utils'
 
 import { ProductSkeleton } from './product-skeleton'
@@ -19,14 +20,17 @@ import { ProductSkeleton } from './product-skeleton'
 export function Product() {
   const { productSlug } = useParams<{ productSlug: string }>()
   const dispatch = useDispatch()
+  const { openSheetCart } = useSheetCart()
 
   const [variantSelect, setVariantSelect] = useState<{
     id: string
     productId: string
     sizeId: string
     size: string
+    sizeName: string
     colorId: string
     color: string
+    colorName: string
     sku: string
     quantity: number
   } | null>()
@@ -55,8 +59,11 @@ export function Product() {
         ) {
           setVariantSelect({
             ...variant,
+
             color: colorDefault.color,
+            colorName: colorDefault.name,
             size: sizeDefault.size,
+            sizeName: sizeDefault.name,
           })
         }
       })
@@ -77,36 +84,51 @@ export function Product() {
           quantityAvailable: variantSelect.quantity,
           name: product?.name,
           color: variantSelect.color,
+          colorName: variantSelect.colorName,
+          sizeName: variantSelect.sizeName,
           size: variantSelect.size,
           priceInCents: product?.priceInCents,
           quantity: qtdToCart,
           sku: variantSelect?.sku,
         }),
       )
+      openSheetCart()
     }
   }
 
-  function handleSizeId(sizeId: string, size: string) {
+  function handleSizeId(sizeId: string, size: string, sizeName: string) {
     if (product) {
       product.variants.forEach((variant) => {
         if (
           variant.sizeId === sizeId &&
           variantSelect?.colorId === variant.colorId
         ) {
-          setVariantSelect({ ...variant, size, color: variantSelect.color })
+          setVariantSelect({
+            ...variant,
+            size,
+            color: variantSelect.color,
+            colorName: variantSelect.colorName,
+            sizeName,
+          })
         }
       })
     }
   }
 
-  function handleColorId(colorId: string, color: string) {
+  function handleColorId(colorId: string, color: string, colorName: string) {
     if (product) {
       product.variants.forEach((variant) => {
         if (
           variant.colorId === colorId &&
           variantSelect?.sizeId === variant.sizeId
         ) {
-          setVariantSelect({ ...variant, color, size: variantSelect.size })
+          setVariantSelect({
+            ...variant,
+            color,
+            size: variantSelect.size,
+            sizeName: variantSelect.sizeName,
+            colorName,
+          })
         }
       })
     }
@@ -139,7 +161,7 @@ export function Product() {
           <div className="mb-4">
             <span className="mb-2 block text-gray-700">Size:</span>
             <div className="flex space-x-4">
-              {product?.sizes.map(({ id, size }) => (
+              {product?.sizes.map(({ id, size, name }) => (
                 <Button
                   key={size}
                   variant="secondary"
@@ -149,7 +171,7 @@ export function Product() {
                       ? ' bg-yellow-800 text-white'
                       : '',
                   )}
-                  onClick={() => handleSizeId(id, size)}
+                  onClick={() => handleSizeId(id, size, name)}
                 >
                   {size}
                 </Button>
@@ -159,7 +181,7 @@ export function Product() {
           <div className="mb-4">
             <span className="mb-2 block text-gray-700">Color:</span>
             <div className="flex space-x-4">
-              {product?.colors.map(({ id, color }) => (
+              {product?.colors.map(({ id, color, name }) => (
                 <Button
                   key={id}
                   variant="secondary"
@@ -170,7 +192,7 @@ export function Product() {
                       : 'border-2 border-black opacity-40',
                   )}
                   style={{ backgroundColor: color }}
-                  onClick={() => handleColorId(id, color)}
+                  onClick={() => handleColorId(id, color, name)}
                 ></Button>
               ))}
             </div>

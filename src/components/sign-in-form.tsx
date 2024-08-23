@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 
-import { authenticateUser } from '@/api/authenticate-user'
+import { useAuth } from '@/contexts/useAuth'
 
 const SignInSchema = z.object({
   email: z.string().email({ message: 'Email inválido' }),
@@ -14,6 +14,8 @@ type SignInFormData = z.infer<typeof SignInSchema>
 
 export function SignInForm() {
   const navigate = useNavigate()
+  const { login } = useAuth()
+
   const [authMessage, setAuthMessage] = useState<{
     message: string
     type: 'success' | 'error'
@@ -28,13 +30,11 @@ export function SignInForm() {
 
   const onSubmit = async ({ email, password }: SignInFormData) => {
     try {
-      const { accessToken } = await authenticateUser({
+      login({
         email,
         password,
       })
 
-      console.log(accessToken)
-      localStorage.setItem('token', accessToken)
       setAuthMessage({
         message: 'Login Successfuly',
         type: 'success',

@@ -3,8 +3,8 @@ import { api } from './api-client'
 interface GetProductRequest {
   pageIndex?: number
   perPage?: number
-  shortBy?: 'asc' | 'desc'
-  categories: string
+  shortBy?: 'asc' | 'desc' | 'default'
+  categories?: string | null
 }
 
 interface GetProductsResponse {
@@ -35,7 +35,7 @@ interface GetProductsResponse {
 
 export async function getProducts({
   pageIndex = 1,
-  perPage = 20,
+  perPage = 16,
   categories,
   shortBy,
 }: GetProductRequest) {
