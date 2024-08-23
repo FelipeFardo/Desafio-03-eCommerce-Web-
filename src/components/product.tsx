@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useParams, useSearchParams } from 'react-router-dom'
 
 import { getProductBySlug } from '@/api/get-product-by-slug'
 import { addToCart } from '@/cart/cart-slice'
@@ -19,6 +19,8 @@ import { ProductSkeleton } from './product-skeleton'
 
 export function Product() {
   const { productSlug } = useParams<{ productSlug: string }>()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const variantSearchParams = searchParams.get('variant')
   const dispatch = useDispatch()
   const { openSheetCart } = useSheetCart()
 
@@ -53,18 +55,36 @@ export function Product() {
       const sizeDefault = result.product.sizes[0]
 
       result.product.variants.forEach((variant) => {
-        if (
-          variant.colorId === colorDefault.id &&
-          variant.sizeId === sizeDefault.id
-        ) {
-          setVariantSelect({
-            ...variant,
+        if (variantSearchParams) {
+          if (variantSearchParams === variant.sku) {
+            const colorSelect = result.product.colors.filter(
+              (color) => color.id === variant.colorId,
+            )[0]
+            const sizeSelect = result.product.sizes.filter(
+              (size) => size.id === variant.sizeId,
+            )[0]
+            setVariantSelect({
+              ...variant,
+              color: colorSelect.color,
+              colorName: colorSelect.name,
+              size: sizeSelect.size,
+              sizeName: sizeSelect.name,
+            })
+          }
+        } else {
+          if (
+            variant.colorId === colorDefault.id &&
+            variant.sizeId === sizeDefault.id
+          ) {
+            setVariantSelect({
+              ...variant,
 
-            color: colorDefault.color,
-            colorName: colorDefault.name,
-            size: sizeDefault.size,
-            sizeName: sizeDefault.name,
-          })
+              color: colorDefault.color,
+              colorName: colorDefault.name,
+              size: sizeDefault.size,
+              sizeName: sizeDefault.name,
+            })
+          }
         }
       })
       return result
@@ -103,6 +123,10 @@ export function Product() {
           variant.sizeId === sizeId &&
           variantSelect?.colorId === variant.colorId
         ) {
+          setSearchParams((prev) => {
+            prev.set('variant', variant.sku)
+            return prev
+          })
           setVariantSelect({
             ...variant,
             size,
@@ -122,6 +146,10 @@ export function Product() {
           variant.colorId === colorId &&
           variantSelect?.sizeId === variant.sizeId
         ) {
+          setSearchParams((prev) => {
+            prev.set('variant', variant.sku)
+            return prev
+          })
           setVariantSelect({
             ...variant,
             color,

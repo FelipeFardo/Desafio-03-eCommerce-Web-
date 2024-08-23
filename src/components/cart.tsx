@@ -22,6 +22,11 @@ export function Cart() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
+  function redirectoToProduct(productWithVariant: string) {
+    navigate(productWithVariant)
+    window.scrollTo(0, 0)
+  }
+
   function redirectToCart() {
     closeSheetCart()
     navigate('/cart')
@@ -61,14 +66,21 @@ export function Cart() {
                   key={item.sku}
                   className="mt-4 flex justify-between space-x-3"
                 >
-                  <div className="flex">
+                  <button
+                    className="flex"
+                    onClick={() =>
+                      redirectoToProduct(
+                        `/product/${item.productSlug}?variant=${item.sku}`,
+                      )
+                    }
+                  >
                     <img
                       src={item.imageUrl}
                       width={100}
                       alt={item.name}
                       className="rounded-2xl"
                     />
-                    <div className="flex flex-col justify-center space-y-2 pl-8">
+                    <div className="flex flex-col items-start space-y-2 pl-8">
                       <h3 className="text-lg font-medium">{item.name}</h3>
                       <h4 className="space-x-2">
                         <span>{item.quantity} </span>
@@ -78,7 +90,7 @@ export function Cart() {
                         </span>
                       </h4>
                     </div>
-                  </div>
+                  </button>
                   <div className="px-4 py-1">
                     <AlertDialog.Root>
                       <AlertDialog.Trigger asChild className="cursor-pointer">

@@ -1,7 +1,7 @@
 import * as AlertDialog from '@radix-ui/react-alert-dialog'
 import { Trash } from 'lucide-react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import bannerImage from '@/assets/images/banner.jpeg'
 import { removeFromCart, updateQuantity } from '@/cart/cart-slice'
@@ -12,7 +12,7 @@ import { formatMoney } from '@/utis/formatMoney'
 
 export function CartPage() {
   const { items, total } = useSelector((state: RootState) => state.cart)
-
+  const navigate = useNavigate()
   const dispatch = useDispatch()
 
   function updateQuantityFunction({
@@ -65,13 +65,19 @@ export function CartPage() {
                   key={item.sku}
                   className="flex items-center justify-around rounded-lg py-8"
                 >
-                  <div className="flex w-20 items-center  space-x-4 lg:w-44">
+                  <button
+                    onClick={() => {
+                      navigate(`/product/${item.productSlug}`)
+                      window.scrollTo(0, 0)
+                    }}
+                    className="flex w-20  space-x-4 lg:w-44"
+                  >
                     <img
                       src={item.imageUrl}
                       alt={item.name}
                       className="hidden h-20 w-20 rounded-xl object-cover lg:block"
                     />
-                    <div>
+                    <div className="flex flex-col items-start">
                       <h3 className="flex flex-col text-lg font-medium text-gray-500">
                         {item.name}
                       </h3>
@@ -79,7 +85,9 @@ export function CartPage() {
                         color:
                         <span>{item.colorName}</span>
                         <span
-                          className={cn('flex h-4 w-4 rounded-full ')}
+                          className={cn(
+                            'flex h-4 w-4 rounded-full border-2 border-black',
+                          )}
                           style={{ backgroundColor: item.color }}
                         ></span>
                       </h4>
@@ -87,7 +95,7 @@ export function CartPage() {
                         size: {item.sizeName}
                       </h4>
                     </div>
-                  </div>
+                  </button>
 
                   <div>
                     <p className="text-gray-500">
