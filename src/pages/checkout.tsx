@@ -1,11 +1,14 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
+import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 
+import { finishSale } from '@/api/finish-sale'
 import { getCep } from '@/api/via-cep'
 import bannerImage from '@/assets/images/banner.jpeg'
+import type { RootState } from '@/cart/store'
 import * as Banner from '@/components/banner'
 import { CheckoutSummaryCard } from '@/components/checkout-summary-card'
 import { useAuth } from '@/contexts/useAuth'
@@ -30,7 +33,7 @@ const checkoutSchema = z.object({
   streetAddress: z.string().min(1, 'Street address is required'),
   city: z.string().min(1, 'City is required'),
   province: z.string().min(1, 'Province is required'),
-  // addOnAddress: z.string().min(1, 'Add-on addres is required'),
+  addOnAddress: z.string().min(1, 'Add-on addres is required'),
   email: z.string().email('Invalid email address'),
   additionalInfo: z.string().optional(),
   paymentMethod: z.enum(paymentMethods, {
@@ -42,7 +45,7 @@ type FormData = z.infer<typeof checkoutSchema>
 
 export function CheckoutPage() {
   const { isAuth, user } = useAuth()
-
+  const { items } = useSelector((state: RootState) => state.cart)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -56,7 +59,6 @@ export function CheckoutPage() {
     setValue,
     control,
     setError,
-
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(checkoutSchema),
@@ -78,10 +80,6 @@ export function CheckoutPage() {
     }
     getUserProfile()
   }, [setValue, user])
-
-  const onSubmit = (data: FormData) => {
-    console.log(data)
-  }
 
   async function autoCompleteAddressByZipCode(zipCode: string) {
     if (zipCode.length === 8) {
@@ -114,6 +112,34 @@ export function CheckoutPage() {
     setValue('zipCode', formattedCep)
     const zipCode = formattedCep.replace(/\D/g, '')
     autoCompleteAddressByZipCode(zipCode)
+  }
+
+  const onSubmit = (data: FormData) => {
+    const itemsFormated = items.map((item) => {
+      return {
+        productSlug: item.productSlug,
+        sku: item.sku,
+        quantity: item.quantity,
+      }
+    })
+
+    try {
+      finishSale({
+        addOnAddress: data.addOnAddress,
+        city: data.city,
+        country: data.country,
+        email: data.email,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        paymentMethod: data.paymentMethod,
+        province: data.province,
+        streetAddress: data.streetAddress,
+        zipCode: data.zipCode,
+        additionalInfo: data.additionalInfo,
+        companyName: data.companyName,
+        items: itemsFormated,
+      })
+    } catch (error) {}
   }
 
   return (
@@ -266,6 +292,21 @@ export function CheckoutPage() {
               </div>
             </div>
 
+            <div className="mt-4">
+              <label className="mb-2 block text-sm font-medium">
+                Add-on address
+              </label>
+              <input
+                type="text"
+                {...register('addOnAddress')}
+                className="w-full  rounded-xl border border-gray-300 p-2"
+              />
+              {errors.addOnAddress && (
+                <p className="text-sm text-red-500">
+                  {errors.addOnAddress.message}
+                </p>
+              )}
+            </div>
             <div className="mt-4">
               <label className="mb-2 block text-sm font-medium">
                 Email Address

@@ -64,7 +64,6 @@ export async function calculateSummary({ items }: CalculateSummaryRequest) {
       items,
     },
   )
-  console.log(response.data)
 
   return response.data
 }

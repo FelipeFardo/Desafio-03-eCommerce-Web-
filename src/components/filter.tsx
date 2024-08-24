@@ -189,7 +189,6 @@ function ShortBy() {
     const value = e.target.value
 
     setSearchParams((prev) => {
-      console.log(value)
       if (value === 'default') prev.delete('shortBy')
       else prev.set('shortBy', value)
       return prev
