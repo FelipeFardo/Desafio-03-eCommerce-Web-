@@ -22,7 +22,7 @@ export function ProductPage() {
   const product = result?.product
   return (
     <>
-      <div className="mb-10 flex h-20 items-center space-x-3 bg-[#FAF3EA] px-8 md:px-24">
+      <div className="bg-tertiary mb-10 flex h-20 items-center space-x-3 px-8 md:px-24">
         <span>Home</span>
         <span className="text-2xl">{'>'}</span>
         <span>Shop</span>
@@ -54,7 +54,7 @@ export function ProductPage() {
         {!showMore && (
           <button
             onClick={() => setShowMore(true)}
-            className="m-8 mx-auto border-2 border-yellow-900 px-16 py-2 text-yellow-900"
+            className="m-8 mx-auto w-56 rounded-2xl border-2 border-black  px-16   py-2 text-black hover:border-yellow-800 hover:bg-yellow-800 hover:text-white disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-black disabled:hover:bg-transparent disabled:hover:text-black"
           >
             Show More
           </button>
@@ -66,7 +66,7 @@ export function ProductPage() {
               navigate(`/?categories=${product?.category.slug}`)
               window.scrollTo(0, 0)
             }}
-            className="m-8 mx-auto border-2 border-yellow-900 px-16 py-2 text-yellow-900"
+            className="m-8 mx-auto w-56 rounded-2xl border-2 border-black  px-16   py-2 text-black hover:border-yellow-800 hover:bg-yellow-800 hover:text-white disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-black disabled:hover:bg-transparent disabled:hover:text-black"
           >
             Show More
           </button>

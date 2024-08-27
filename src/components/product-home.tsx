@@ -19,13 +19,17 @@ export function ProductHome() {
 
   const { data: result, isLoading: isLoadingProducts } = useQuery({
     queryKey: ['products', pageIndex, perPage, categories, shortBy],
-    queryFn: () =>
-      getProducts({
+    queryFn: () => {
+      window.scrollTo(0, 0)
+      const productsWithMeta = getProducts({
         perPage,
         pageIndex,
         categories,
         shortBy,
-      }),
+      })
+
+      return productsWithMeta
+    },
   })
 
   const products = result?.products

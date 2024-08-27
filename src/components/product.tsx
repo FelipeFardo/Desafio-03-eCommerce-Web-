@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useParams, useSearchParams } from 'react-router-dom'
 
@@ -14,6 +14,7 @@ import { TwitterBlackIcon } from '@/components/icons/twitter-black'
 import { ProductImages } from '@/components/product-images'
 import { useSheetCart } from '@/contexts/sheet-cart'
 import { cn } from '@/lib/utils'
+import { formatMoney } from '@/utis/formatMoney'
 
 import { ProductSkeleton } from './product-skeleton'
 
@@ -91,6 +92,30 @@ export function Product() {
     },
   })
 
+  useEffect(() => {
+    if (result) {
+      result.product.variants.forEach((variant) => {
+        if (variantSearchParams) {
+          if (variantSearchParams === variant.sku) {
+            const colorSelect = result.product.colors.filter(
+              (color) => color.id === variant.colorId,
+            )[0]
+            const sizeSelect = result.product.sizes.filter(
+              (size) => size.id === variant.sizeId,
+            )[0]
+            setVariantSelect({
+              ...variant,
+              color: colorSelect.color,
+              colorName: colorSelect.name,
+              size: sizeSelect.size,
+              sizeName: sizeSelect.name,
+            })
+          }
+        }
+      })
+    }
+    setQtdToCart(1)
+  }, [variantSearchParams, result])
   if (isLoadingProducts) return <ProductSkeleton />
 
   const product = result?.product
@@ -164,13 +189,16 @@ export function Product() {
 
   const qtdNoAvailable =
     (variantSelect && qtdToCart > variantSelect?.quantity) || false
+
   return (
     <div className="6 container mx-auto flex flex-wrap lg:flex-nowrap">
       {product && <ProductImages images={product?.images} />}
       <div className="mt-6 w-full pl-16">
         <h1 className="text-2xl font-bold">{product?.name}</h1>
 
-        <p className="text-xl text-gray-800">R$ {product?.priceInCents}</p>
+        <p className="text-xl text-gray-800">
+          R$ {product?.priceInCents && formatMoney(product?.priceInCents)}
+        </p>
         <div className="mt-2 flex items-center">
           <span className="flex w-24 text-yellow-500">
             <Star />
@@ -231,10 +259,7 @@ export function Product() {
                 Quantity not available
               </span>
             )}
-            <div className="mb-2">
-              <label htmlFor="quantity" className="block text-gray-700">
-                Quantidade:
-              </label>
+            <div className="my-8">
               <div className="mb-4 mt-2 flex items-center space-x-4">
                 <div className="flex w-auto items-center rounded-2xl border-2 border-gray-500 ">
                   <button

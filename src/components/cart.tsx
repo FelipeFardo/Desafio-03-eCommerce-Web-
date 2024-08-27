@@ -23,6 +23,7 @@ export function Cart() {
   const dispatch = useDispatch()
 
   function redirectoToProduct(productWithVariant: string) {
+    closeSheetCart()
     navigate(productWithVariant)
     window.scrollTo(0, 0)
   }
@@ -99,13 +100,13 @@ export function Cart() {
                       <AlertDialog.Portal>
                         <AlertDialog.Content className="data-[state=open]:animate-scaleIn fixed left-[50%] top-[50%] z-50  max-h-[85vh] w-[90vw] max-w-[500px] translate-x-[-50%] translate-y-[-50%] rounded-2xl border-2 border-yellow-900  bg-white p-6 shadow-xl focus:outline-none">
                           <AlertDialog.Title className="mb-2 text-xl font-semibold text-gray-900">
-                            Deseja remover item do carrinho?
+                            Do you want to remove item from cart?
                           </AlertDialog.Title>
                           <AlertDialog.Description className="mb-5 mt-2 text-sm leading-normal text-gray-600"></AlertDialog.Description>
                           <div className="flex justify-end gap-4">
                             <AlertDialog.Cancel asChild>
                               <button className="rounded-xl bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2">
-                                Cancelar
+                                Cancel
                               </button>
                             </AlertDialog.Cancel>
                             <AlertDialog.Action asChild>
@@ -113,7 +114,7 @@ export function Cart() {
                                 onClick={() => removeItemToCart(item.sku)}
                                 className="rounded-xl bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                               >
-                                Remover
+                                Remove
                               </button>
                             </AlertDialog.Action>
                           </div>
@@ -135,18 +136,18 @@ export function Cart() {
               <button
                 disabled={!items.length}
                 onClick={redirectToCart}
-                className="w-20 rounded-3xl border px-3 py-2 disabled:cursor-not-allowed disabled:text-gray-500"
+                className="w-20 rounded-3xl border px-3 py-2 hover:bg-yellow-900 hover:text-white disabled:cursor-not-allowed disabled:text-gray-500"
               >
                 Cart
               </button>
               <button
                 disabled={!items.length}
                 onClick={redirectToChekout}
-                className="w-36 rounded-3xl border px-3 py-2 disabled:cursor-not-allowed disabled:text-gray-500"
+                className="w-36 rounded-3xl border px-3 py-2 hover:bg-yellow-900 hover:text-white disabled:cursor-not-allowed disabled:text-gray-500"
               >
                 Checkout
               </button>
-              <button className="w-36 rounded-3xl border px-3 py-2">
+              <button className="w-36 rounded-3xl border px-3 py-2 hover:bg-yellow-900 hover:text-white disabled:cursor-not-allowed disabled:text-gray-500">
                 Comparison
               </button>
             </nav>

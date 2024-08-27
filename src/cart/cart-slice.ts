@@ -84,6 +84,7 @@ const cartSlice = createSlice({
         toast.success(
           `${action.payload.name} has been successfully added to your cart!`,
         )
+        localStorage.setItem('cart', JSON.stringify(state))
         return
       }
 
@@ -130,6 +131,7 @@ const cartSlice = createSlice({
         item.subTotal = action.payload.quantity * item.priceInCents
         state.total += action.payload.quantity * item.priceInCents
       }
+
       localStorage.setItem('cart', JSON.stringify(state))
     },
     updateCartToSummary: (
@@ -176,6 +178,14 @@ const cartSlice = createSlice({
       })
       localStorage.setItem('cart', JSON.stringify(state))
     },
+    resetCart: () => {
+      localStorage.removeItem('cart')
+
+      return {
+        items: [],
+        total: 0,
+      }
+    },
   },
 })
 
@@ -184,5 +194,6 @@ export const {
   removeFromCart,
   updateQuantity,
   updateCartToSummary,
+  resetCart,
 } = cartSlice.actions
 export default cartSlice.reducer

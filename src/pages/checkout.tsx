@@ -1,13 +1,14 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 
 import { finishSale } from '@/api/finish-sale'
 import { getCep } from '@/api/via-cep'
 import bannerImage from '@/assets/images/banner.jpeg'
+import { resetCart } from '@/cart/cart-slice'
 import type { RootState } from '@/cart/store'
 import * as Banner from '@/components/banner'
 import { CheckoutSummaryCard } from '@/components/checkout-summary-card'
@@ -47,7 +48,7 @@ export function CheckoutPage() {
   const { isAuth, user } = useAuth()
   const { items } = useSelector((state: RootState) => state.cart)
   const navigate = useNavigate()
-
+  const dispatch = useDispatch()
   useEffect(() => {
     if (!isAuth) navigate('/auth')
   })
@@ -114,7 +115,7 @@ export function CheckoutPage() {
     autoCompleteAddressByZipCode(zipCode)
   }
 
-  const onSubmit = (data: FormData) => {
+  const onSubmit = async (data: FormData) => {
     const itemsFormated = items.map((item) => {
       return {
         productSlug: item.productSlug,
@@ -124,7 +125,7 @@ export function CheckoutPage() {
     })
 
     try {
-      finishSale({
+      const { orderId } = await finishSale({
         addOnAddress: data.addOnAddress,
         city: data.city,
         country: data.country,
@@ -139,6 +140,9 @@ export function CheckoutPage() {
         companyName: data.companyName,
         items: itemsFormated,
       })
+
+      navigate(`/order/${orderId}`)
+      dispatch(resetCart())
     } catch (error) {}
   }
 

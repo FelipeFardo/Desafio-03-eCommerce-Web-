@@ -1,12 +1,14 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
+import * as Select from '@radix-ui/react-select'
 import { useQuery } from '@tanstack/react-query'
 import { CheckIcon, SlidersHorizontal } from 'lucide-react'
 import { type ReactNode } from 'react'
-import React from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 import { getCategories } from '@/api/get-categories'
 import { getProducts } from '@/api/get-products'
+
+import { SelectItem } from './select-item'
 
 interface RootProps {
   children: ReactNode
@@ -14,7 +16,7 @@ interface RootProps {
 
 function Root({ children }: RootProps) {
   return (
-    <div className="flex h-[100px] items-center  bg-[#F9F1E7]">{children}</div>
+    <div className="flex h-[100px] items-center bg-tertiary">{children}</div>
   )
 }
 
@@ -30,7 +32,7 @@ function Content({ children }: ContentProps) {
   )
 }
 
-function FilterDetails() {
+function Categories() {
   const [searchParams, setSearchParams] = useSearchParams()
   const categoriesUrl = searchParams.get('categories')?.split(',') || []
 
@@ -38,6 +40,7 @@ function FilterDetails() {
     queryKey: ['categories'],
     queryFn: () => getCategories(),
   })
+
   function includeCategory(slug: string) {
     setSearchParams((prev) => {
       const categories = prev.get('categories')?.split(',') || []
@@ -60,6 +63,7 @@ function FilterDetails() {
       return prev
     })
   }
+
   function handleCategory(slug: string) {
     if (categoriesUrl.includes(slug)) removeCategory(slug)
     else includeCategory(slug)
@@ -67,37 +71,36 @@ function FilterDetails() {
   const categories = result?.categories
 
   return (
-    <>
-      <DropdownMenu.Root>
-        <DropdownMenu.Trigger className="flex items-center gap-4">
-          <SlidersHorizontal className="  pointer-events-none  transform text-gray-500 " />
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger className="flex items-center gap-4" asChild>
+        <button className="flex items-center gap-2 rounded-md px-4 py-2">
+          <SlidersHorizontal className="pointer-events-none transform text-black" />
           Filter
-          <ShowResultMeta />
-        </DropdownMenu.Trigger>
-
-        <DropdownMenu.Portal>
-          <DropdownMenu.Content className="mx-16 border-2 border-yellow-900 bg-white p-4">
-            <DropdownMenu.Group>
-              {categories &&
-                categories.map((category) => (
-                  <DropdownMenu.CheckboxItem
-                    key={category.name}
-                    className="text-violet  data-[disabled]:text-mauve8 data-[highlighted]:bg-violet9 data-[highlighted]:text-violet1 text-md relative flex h-[25px] select-none items-center rounded-[3px] px-[5px] pl-[25px] leading-none outline-none data-[disabled]:pointer-events-none"
-                    checked={categoriesUrl.includes(category.slug)}
-                    onCheckedChange={() => handleCategory(category.slug)}
-                  >
-                    <DropdownMenu.ItemIndicator className="absolute left-0 inline-flex w-[20px] items-center justify-center">
-                      <CheckIcon />
-                    </DropdownMenu.ItemIndicator>
-                    {category.name}
-                  </DropdownMenu.CheckboxItem>
-                ))}
-            </DropdownMenu.Group>
-            <DropdownMenu.Arrow />
-          </DropdownMenu.Content>
-        </DropdownMenu.Portal>
-      </DropdownMenu.Root>
-    </>
+        </button>
+      </DropdownMenu.Trigger>
+      <DropdownMenu.Portal>
+        <DropdownMenu.Content className="mx-16 w-64 rounded-lg border-2 border-yellow-900 bg-white p-2 shadow-lg">
+          <h3 className="mx-auto flex justify-center border-b-2 border-yellow-900">
+            Categories
+          </h3>
+          {categories &&
+            categories.map((category) => (
+              <DropdownMenu.CheckboxItem
+                key={category.name}
+                className="flex cursor-pointer items-center rounded px-2 py-1.5 text-sm text-gray-700 transition-colors duration-150 hover:bg-tertiary"
+                checked={categoriesUrl.includes(category.slug)}
+                onCheckedChange={() => handleCategory(category.slug)}
+              >
+                <DropdownMenu.ItemIndicator className="mr-2">
+                  <CheckIcon className="h-4 w-4 text-yellow-600" />
+                </DropdownMenu.ItemIndicator>
+                {category.name}
+              </DropdownMenu.CheckboxItem>
+            ))}
+          <DropdownMenu.Arrow />
+        </DropdownMenu.Content>
+      </DropdownMenu.Portal>
+    </DropdownMenu.Root>
   )
 }
 
@@ -128,7 +131,7 @@ function ShowResultMeta() {
   const totalCount = result?.meta.totalCount || 50
 
   return (
-    <div className="flex items-center  border-l-2 border-gray-400 px-4">
+    <div className="flex items-center justify-center px-2">
       Showing
       <span className="px-1">{initialIndex}</span>-
       <span className="px-1">{finishiIndex}</span>
@@ -141,43 +144,63 @@ function ShowResultMeta() {
 function ItemsPerPage() {
   const [searchParams, setSearchParams] = useSearchParams()
 
-  const perPage =
-    Number(searchParams.get('perPage')) > 50
-      ? '50'
-      : searchParams.get('perPage') || '16'
+  const perPageParams = Number(searchParams.get('perPage'))
+  const perPage = Number(perPageParams) > 50 ? '50' : perPageParams || '16'
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value, 10) || 1
-    if (value > 50) {
-      setSearchParams((prev) => {
-        prev.set('perPage', perPage)
-        return prev
-      })
-    } else {
-      setSearchParams((prev) => {
-        prev.set('perPage', String(value))
-        return prev
-      })
-    }
+  const handleChange = (value: string = '16') => {
+    setSearchParams((prev) => {
+      prev.set('perPage', Number(value) > 50 ? String(perPage) : String(value))
+      return prev
+    })
   }
 
   return (
-    <div className="flex items-center space-x-2">
-      <label htmlFor="itemsPerPage" className="text-sm">
-        Show:
-      </label>
-      <input
-        type="number"
-        id="itemsPerPage"
-        name="itemsPerPage"
-        min="1"
-        max="50"
-        value={perPage || 16}
-        onChange={handleChange}
-        className="w-16 rounded-md border border-gray-300 px-2 py-1 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
-      <ShortBy />
-    </div>
+    <Select.Root defaultValue={String(perPage)} onValueChange={handleChange}>
+      <Select.Trigger aria-label="per-page" className="space-x-4 px-4">
+        <span>Show:</span>
+        <div className="inline-flex h-[35px] items-center justify-center gap-[5px] rounded bg-white px-[15px] text-[15px]">
+          <Select.Value defaultValue={16} placeholder="16" />
+        </div>
+      </Select.Trigger>
+      <Select.Portal>
+        <Select.Content className="w-20 overflow-hidden rounded-md border-2 border-yellow-900 bg-white shadow-xl">
+          <Select.Viewport className="p-[5px]">
+            <Select.Group>
+              <SelectItem
+                className="flex cursor-pointer items-center justify-center rounded border-2 border-transparent px-2 py-1.5 text-sm text-gray-700 transition-colors duration-150 hover:border-black hover:bg-tertiary"
+                value="12"
+              >
+                12
+              </SelectItem>
+              <SelectItem
+                className="flex cursor-pointer items-center  justify-center rounded border-2 border-transparent px-2 py-1.5 text-sm text-gray-700 transition-colors duration-150 hover:border-black hover:bg-tertiary"
+                value="16"
+              >
+                16
+              </SelectItem>
+              <SelectItem
+                className="flex cursor-pointer items-center  justify-center rounded border-2 border-transparent px-2 py-1.5 text-sm text-gray-700 transition-colors duration-150 hover:border-black hover:bg-tertiary"
+                value="20"
+              >
+                20
+              </SelectItem>
+              <SelectItem
+                className="flex cursor-pointer items-center  justify-center rounded border-2 border-transparent px-2 py-1.5 text-sm text-gray-700 transition-colors duration-150 hover:border-black hover:bg-tertiary"
+                value="24"
+              >
+                24
+              </SelectItem>
+              <SelectItem
+                className="flex cursor-pointer items-center  justify-center rounded border-2 border-transparent px-2 py-1.5 text-sm text-gray-700 transition-colors duration-150 hover:border-black hover:bg-tertiary"
+                value="28"
+              >
+                28
+              </SelectItem>
+            </Select.Group>
+          </Select.Viewport>
+        </Select.Content>
+      </Select.Portal>
+    </Select.Root>
   )
 }
 
@@ -185,33 +208,53 @@ function ShortBy() {
   const [searchParams, setSearchParams] = useSearchParams()
 
   const shortBy = searchParams.get('shortBy')
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value
-
+  const handleChange = (value: string) => {
     setSearchParams((prev) => {
       if (value === 'default') prev.delete('shortBy')
       else prev.set('shortBy', value)
       return prev
     })
   }
+
   return (
-    <div className="flex items-center space-x-3">
-      <label htmlFor="shortBy" className="text-sm text-gray-700">
-        Short By:
-      </label>
-      <select
-        id="shortBy"
-        name="shortBy"
-        value={shortBy || 'default'}
-        onChange={handleChange}
-        className="w-44 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 shadow-sm transition duration-150 ease-in-out focus:border-yellow-900 focus:outline-none focus:ring-2 focus:ring-yellow-900"
-      >
-        <option value="default">Default</option>
-        <option value="asc">Price Ascending</option>
-        <option value="desc">Price Descending</option>
-      </select>
-    </div>
+    <Select.Root
+      defaultValue={shortBy || 'default'}
+      onValueChange={handleChange}
+    >
+      <Select.Trigger aria-label="short-by" className="space-x-4 px-4 py-2">
+        <span> Short By:</span>
+        <div className="inline-flex h-[35px]  w-[160px] items-center justify-center rounded bg-white text-[15px]">
+          <Select.Value defaultValue={16} placeholder="16" />
+        </div>
+      </Select.Trigger>
+      <Select.Portal>
+        <Select.Content className="overflow-hidden rounded-md border-2 border-yellow-900 bg-white shadow-xl">
+          <Select.Viewport className="p-[5px]">
+            <Select.Group>
+              <SelectItem
+                className="flex cursor-pointer items-center justify-center rounded border-2 border-transparent px-2 py-1.5 text-sm text-gray-700 transition-colors duration-150 hover:border-black hover:bg-tertiary"
+                value="default"
+              >
+                Default
+              </SelectItem>
+              <SelectItem
+                className="flex cursor-pointer items-center justify-center rounded border-2 border-transparent px-2 py-1.5 text-sm text-gray-700 transition-colors duration-150 hover:border-black hover:bg-tertiary"
+                value="asc"
+              >
+                Price Ascending
+              </SelectItem>
+              <SelectItem
+                className="flex cursor-pointer items-center justify-center rounded border-2 border-transparent px-2 py-1.5 text-sm text-gray-700 transition-colors duration-150 hover:border-black hover:bg-tertiary"
+                value="desc"
+              >
+                Price Descending
+              </SelectItem>
+            </Select.Group>
+          </Select.Viewport>
+        </Select.Content>
+      </Select.Portal>
+    </Select.Root>
   )
 }
 
-export { Root, ItemsPerPage, FilterDetails, Content }
+export { Root, ItemsPerPage, Categories, Content, ShowResultMeta, ShortBy }

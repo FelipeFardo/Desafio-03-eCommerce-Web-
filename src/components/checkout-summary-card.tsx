@@ -53,6 +53,7 @@ export function CheckoutSummaryCard() {
           subTotal: item.subTotal,
         }
       })
+
       dispatch(
         updateCartToSummary({ items: itensFormated, total: result.total }),
       )

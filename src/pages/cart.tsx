@@ -53,7 +53,7 @@ export function CartPage() {
       <div className="container mx-auto p-6">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
           <div className="md:col-span-2">
-            <div className="flex items-end justify-center space-x-10 rounded-lg bg-[#FAF3EA] py-4 shadow-lg sm:space-x-20 md:space-x-16 xl:space-x-36">
+            <div className="bg-tertiary flex items-end justify-center space-x-10 rounded-lg py-4 shadow-lg sm:space-x-20 md:space-x-16 xl:space-x-36">
               <h3 className="text-md font-medium">Product</h3>
               <h3 className="text-md font-medium">Price</h3>
               <h3 className="text-md font-medium">Quantity</h3>
@@ -67,10 +67,12 @@ export function CartPage() {
                 >
                   <button
                     onClick={() => {
-                      navigate(`/product/${item.productSlug}`)
+                      navigate(
+                        `/product/${item.productSlug}?variant=${item.sku}`,
+                      )
                       window.scrollTo(0, 0)
                     }}
-                    className="flex w-20  space-x-4 lg:w-44"
+                    className="flex w-20  space-x-4 lg:w-32"
                   >
                     <img
                       src={item.imageUrl}
@@ -97,13 +99,13 @@ export function CartPage() {
                     </div>
                   </button>
 
-                  <div>
+                  <div className="flex min-w-32 justify-center">
                     <p className="text-gray-500">
                       ${formatMoney(item.priceInCents)}
                     </p>
                   </div>
 
-                  <div className="flex w-auto items-center rounded-2xl border-2 border-gray-500 ">
+                  <div className="flex items-center rounded-2xl border-2 border-gray-500">
                     <button
                       onClick={() =>
                         updateQuantityFunction({
@@ -144,7 +146,7 @@ export function CartPage() {
                         <AlertDialog.Overlay className="data-[state=open]:animate-fadeIn fixed inset-0 bg-black/50 backdrop-blur-sm" />
                         <AlertDialog.Content className="data-[state=open]:animate-scaleIn fixed left-[50%] top-[50%] max-h-[85vh] w-[90vw] max-w-[500px] translate-x-[-50%] translate-y-[-50%] rounded-2xl border-2 border-yellow-900  bg-white p-6 shadow-xl focus:outline-none">
                           <AlertDialog.Title className="mb-2 text-xl font-semibold text-gray-900">
-                            Deseja remover item do carrinho?
+                            Do you want to remove item from cart?
                           </AlertDialog.Title>
                           <AlertDialog.Description className="mb-5 mt-2 text-sm leading-normal text-gray-600"></AlertDialog.Description>
                           <div className="flex justify-end gap-4">
@@ -158,7 +160,7 @@ export function CartPage() {
                                 onClick={() => removeItemToCart(item.sku)}
                                 className="rounded-xl bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                               >
-                                Remover
+                                Remove
                               </button>
                             </AlertDialog.Action>
                           </div>
@@ -171,7 +173,7 @@ export function CartPage() {
             })}
           </div>
           <div>
-            <div className="rounded-lg bg-[#FAF3EA] p-6 shadow-lg">
+            <div className="bg-tertiary rounded-lg p-6 shadow-lg">
               <h2 className="mb-4 flex justify-center text-2xl font-semibold">
                 Cart totals
               </h2>
@@ -179,13 +181,13 @@ export function CartPage() {
                 <div className="mb-4 flex justify-between">
                   <span className="text-md">Subtotal:</span>
                   <span className="text-md text-gray-500">
-                    $ {total.toFixed(2)}
+                    $ {formatMoney(total)}
                   </span>
                 </div>
                 <div className="mb-6 flex justify-between">
                   <span className="text-md">Total:</span>
                   <span className="text-xl font-medium text-yellow-600">
-                    $ {total.toFixed(2)}
+                    $ {formatMoney(total)}
                   </span>
                 </div>
                 <div className="flex justify-center pt-8">

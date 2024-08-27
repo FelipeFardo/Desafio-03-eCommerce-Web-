@@ -13,7 +13,7 @@ interface NumberedButtonProps extends BaseButtonProps {
 const BaseButton = ({ className, children, ...props }: BaseButtonProps) => (
   <button
     className={cn(
-      'cursor-pointer rounded-[10px] border-none bg-[#F9F1E7] text-base text-black hover:bg-[#B88E2F] hover:text-white',
+      'bg-tertiary cursor-pointer rounded-[10px] border-none text-base text-black hover:bg-[#B88E2F] hover:text-white',
       className,
     )}
     {...props}

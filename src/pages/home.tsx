@@ -22,8 +22,18 @@ export function HomePage() {
       </Banner.Root>
       <FilterComponent.Root>
         <FilterComponent.Content>
-          <FilterComponent.FilterDetails />
-          <FilterComponent.ItemsPerPage />
+          <div className="flex space-x-2">
+            <FilterComponent.Categories />
+            <div className="flex items-center">
+              <span className="h-[70%] border-l-2 border-gray-400"></span>
+            </div>
+            <FilterComponent.ShowResultMeta />
+          </div>
+
+          <div className="flex">
+            <FilterComponent.ItemsPerPage />
+            <FilterComponent.ShortBy />
+          </div>
         </FilterComponent.Content>
       </FilterComponent.Root>
       <ProductHome />

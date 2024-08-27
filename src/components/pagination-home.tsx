@@ -27,6 +27,7 @@ export function PaginationHome() {
   })
 
   function handlePage(page: number) {
+    window.scrollTo(0, 0)
     if (page < 0) return
     setSearchParams((prev) => {
       prev.set('pageIndex', String(page))

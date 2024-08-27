@@ -48,10 +48,7 @@ interface GetProductBySlugResponse {
 }
 
 export async function getProductBySlug(slug: string) {
-  const response = await api.get<GetProductBySlugResponse>(
-    `/products/${slug}`,
-    {},
-  )
+  const response = await api.get<GetProductBySlugResponse>(`/products/${slug}`)
 
   return response.data
 }
