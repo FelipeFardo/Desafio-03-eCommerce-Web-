@@ -86,7 +86,7 @@ export function CartPage() {
                       alt={item.name}
                       className="hidden h-20 w-20 rounded-xl object-cover lg:block"
                     />
-                    <div className="flex flex-col items-start">
+                    <div className="flex min-w-40 flex-col items-start">
                       <h3 className="flex flex-col text-lg font-medium text-gray-500">
                         {item.name}
                       </h3>
@@ -100,7 +100,7 @@ export function CartPage() {
                           style={{ backgroundColor: item.hexCode }}
                         ></span>
                       </h4>
-                      <h4 className="text-sm text-gray-500 ">
+                      <h4 className="text-sm text-gray-500">
                         size: {item.sizeName}
                       </h4>
                     </div>
