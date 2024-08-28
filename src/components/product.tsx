@@ -217,7 +217,7 @@ export function Product() {
             {variantSelect?.priceInCents &&
               formatMoney(variantSelect?.priceInCents)}
           </p>
-          <div className="flex items-end space-x-2 text-sm font-medium">
+          <div className="text-md flex items-end space-x-2 font-medium">
             <span className="text-gray-400  line-through">
               {variantSelect?.oldPriceInCents &&
                 formatMoney(variantSelect?.oldPriceInCents)}
