@@ -75,7 +75,7 @@ export function CollectionProducts({
           <ProductCard.ImageCard url={productVariant.image.url} alt="Imagem" />
           <ProductCard.Content>
             <ProductCard.Title name={productVariant.product.name} />
-            <div className="space-y-2">
+            <div className="space-y-2 pb-2">
               <div className="flex space-x-4">
                 {productVariant.product.sizes.map((size) => {
                   return (
