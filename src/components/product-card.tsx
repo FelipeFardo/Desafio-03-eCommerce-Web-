@@ -33,7 +33,7 @@ export function PriceOld({ priceOldInCents }: PriceOldProps) {
   const priceOldInDolar = formatMoney(priceOldInCents)
 
   return (
-    <span className="text-xs font-medium text-gray-400 line-through">
+    <span className="text-md font-medium text-gray-400 line-through">
       Rp {priceOldInDolar}
     </span>
   )
