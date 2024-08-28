@@ -3,7 +3,7 @@ import { useMutation } from '@tanstack/react-query'
 import { LoaderCircle } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { z } from 'zod'
 
 import { useAuth } from '@/contexts/useAuth'
@@ -16,6 +16,7 @@ type SignInFormData = z.infer<typeof SignInSchema>
 
 export function SignInForm() {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const { login } = useAuth()
 
   const [authMessage, setAuthMessage] = useState<{
@@ -38,7 +39,9 @@ export function SignInForm() {
         type: 'success',
       })
       setTimeout(() => {
-        navigate('/')
+        const redirect = searchParams.get('redirect')
+        if (redirect) navigate(`/${redirect}`)
+        else navigate('/')
       }, 2000)
     },
     onError: () => {
@@ -91,9 +94,14 @@ export function SignInForm() {
         )}
       </div>
       <div className="mb-4">
-        <label htmlFor="email" className="block text-sm font-medium">
-          Password
-        </label>
+        <div className="flex justify-between">
+          <label htmlFor="email" className="block text-sm font-medium">
+            Password
+          </label>
+          <a href="#" className="text-sm text-blue-800">
+            forgot password
+          </a>
+        </div>
         <input
           {...register('password')}
           type="password"

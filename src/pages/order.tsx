@@ -45,6 +45,9 @@ export function OrderPage() {
           <strong>Additional Information:</strong>{' '}
           {order.additionalInfo || 'N/A'}
         </p>
+        <p>
+          <strong>Status:</strong> {order.status}
+        </p>
       </div>
 
       <div className="mb-6">

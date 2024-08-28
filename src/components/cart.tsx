@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 
 import { removeFromCart } from '@/cart/cart-slice'
 import { useSheetCart } from '@/contexts/sheet-cart'
+import { useAuth } from '@/contexts/useAuth'
 import { cn } from '@/lib/utils'
 import { formatMoney } from '@/utis/formatMoney'
 
@@ -20,6 +21,7 @@ import {
 export function Cart() {
   const { items, total } = useSelector((state: RootState) => state.cart)
   const { isSheetCartOpen, openSheetCart, closeSheetCart } = useSheetCart()
+  const { isAuth } = useAuth()
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
@@ -31,11 +33,13 @@ export function Cart() {
 
   function redirectToCart() {
     closeSheetCart()
+
     navigate('/cart')
   }
   function redirectToChekout() {
     closeSheetCart()
-    navigate('/checkout')
+    if (isAuth) navigate('/checkout')
+    else navigate('/auth?redirect=checkout')
   }
   function removeItemToCart(sku: string) {
     dispatch(

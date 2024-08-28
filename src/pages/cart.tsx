@@ -1,19 +1,27 @@
 import * as AlertDialog from '@radix-ui/react-alert-dialog'
 import { Trash } from 'lucide-react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import bannerImage from '@/assets/images/banner.jpeg'
 import { removeFromCart, updateQuantity } from '@/cart/cart-slice'
 import type { RootState } from '@/cart/store'
 import * as Banner from '@/components/banner'
+import { useAuth } from '@/contexts/useAuth'
 import { cn } from '@/lib/utils'
 import { formatMoney } from '@/utis/formatMoney'
 
 export function CartPage() {
   const { items, total } = useSelector((state: RootState) => state.cart)
+  const { isAuth } = useAuth()
   const navigate = useNavigate()
   const dispatch = useDispatch()
+
+  function redirectToCheckout() {
+    if (isAuth) navigate('/checkout')
+    else navigate('/auth?redirect=checkout')
+    window.scrollTo(0, 0)
+  }
 
   function updateQuantityFunction({
     sku,
@@ -189,12 +197,12 @@ export function CartPage() {
                   </span>
                 </div>
                 <div className="flex justify-center pt-8">
-                  <Link
-                    to="/checkout"
+                  <button
+                    onClick={redirectToCheckout}
                     className="rounded-2xl border-2 border-gray-600  px-4 py-3 font-medium hover:bg-yellow-900 hover:text-white 2xl:px-12"
                   >
                     Check Out
-                  </Link>
+                  </button>
                 </div>
               </div>
             </div>

@@ -113,12 +113,23 @@ export function CheckoutSummaryCard({
           itemsUpdated.map((item) => {
             return (
               <li key={item.variant.sku} className="mb-4 flex justify-between">
-                <p>
-                  <span className="text-gray-500">{item.product.name} </span>
-                  <span className="font-semibol pl-4 text-sm">
-                    x {item.quantity}
-                  </span>
-                </p>
+                <div>
+                  <p>
+                    <span className="text-gray-500">{item.product.name} </span>
+                    <span className="font-semibol pl-4 text-sm">
+                      x {item.quantity}
+                    </span>
+                  </p>
+                  <div className="flex space-x-4">
+                    <h4 className="flex items-center gap-2 text-sm text-gray-500 ">
+                      color:
+                      <span>{item.variant.color.name}</span>
+                    </h4>
+                    <h4 className="flex text-sm text-gray-500 ">
+                      size: {item.variant.size.name}
+                    </h4>
+                  </div>
+                </div>
                 <span>${formatMoney(item.subTotal)}</span>
               </li>
             )

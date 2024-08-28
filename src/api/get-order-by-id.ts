@@ -10,6 +10,7 @@ interface getOrderByIdResponse {
     zipCode: string
     country: string
     streetAddress: string
+    status: 'PENDING' | 'IN_PROGRESS' | 'SHIPPED' | 'DELIVERED' | 'COMPLETED'
     city: string
     province: string
     email: string

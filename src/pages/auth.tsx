@@ -1,4 +1,6 @@
+import { ArrowLeft } from 'lucide-react'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import loginImage from '@/assets/images/520fab60716f712257d7f6a7fc48a42f.jpeg'
 import { AppleIcon } from '@/components/icons/apple'
@@ -8,7 +10,7 @@ import { SignUpForm } from '@/components/sign-up-form'
 
 export function Auth() {
   const [isRegister, setIsRegister] = useState<boolean>(false)
-
+  const navigate = useNavigate()
   return (
     <div className="flex min-h-screen">
       <div className="flex w-full items-center justify-center md:w-1/2">
@@ -39,7 +41,7 @@ export function Auth() {
 
             <button className="flex w-full items-center  justify-center  space-x-2 rounded-full  border border-gray-300 bg-white px-4 py-2 text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-lime-900 focus:ring-offset-2">
               <AppleIcon />
-              <span>Entrar com Apple</span>
+              <span>Sign in with Apple</span>
             </button>
           </div>
           {!isRegister && (
@@ -70,10 +72,20 @@ export function Auth() {
               </a>
             </div>
           )}
+          <div className="mt-4 flex justify-center">
+            <a
+              onClick={() => {
+                navigate('/')
+              }}
+              className="flex cursor-pointer space-x-2"
+            >
+              <ArrowLeft />
+              <span>Back to Home</span>
+            </a>
+          </div>
         </div>
       </div>
 
-      {/* Imagem */}
       <div
         className="hidden bg-cover bg-center md:block md:w-1/2"
         style={{ backgroundImage: `url('${loginImage}')` }}
