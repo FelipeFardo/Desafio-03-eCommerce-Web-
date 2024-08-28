@@ -62,7 +62,7 @@ export function CartPage() {
       <div className="container mx-auto p-6">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
           <div className="md:col-span-2">
-            <div className="flex items-end justify-center space-x-10 rounded-lg bg-tertiary py-4 shadow-lg sm:space-x-20 md:space-x-16 xl:space-x-36">
+            <div className="flex items-end justify-center space-x-16 rounded-lg bg-tertiary py-4 shadow-lg sm:space-x-20 md:space-x-20 xl:space-x-36">
               <h3 className="text-md font-medium">Product</h3>
               <h3 className="text-md font-medium">Price</h3>
               <h3 className="text-md font-medium">Quantity</h3>
@@ -108,7 +108,7 @@ export function CartPage() {
 
                   <div className="flex min-w-32 justify-center">
                     <p className="text-gray-500">
-                      ${formatMoney(item.priceInCents)}
+                      Rp {formatMoney(item.priceInCents)}
                     </p>
                   </div>
 
@@ -142,7 +142,7 @@ export function CartPage() {
 
                   <div className="flex w-36 items-center justify-end space-x-4">
                     <p className="flex items-center text-gray-500">
-                      $ {formatMoney(item.subTotal)}
+                      Rp {formatMoney(item.subTotal)}
                     </p>
 
                     <AlertDialog.Root>
@@ -159,7 +159,7 @@ export function CartPage() {
                           <div className="flex justify-end gap-4">
                             <AlertDialog.Cancel asChild>
                               <button className="rounded-xl bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2">
-                                Cancelar
+                                Cancel
                               </button>
                             </AlertDialog.Cancel>
                             <AlertDialog.Action asChild>
@@ -188,13 +188,13 @@ export function CartPage() {
                 <div className="mb-4 flex justify-between">
                   <span className="text-md">Subtotal:</span>
                   <span className="text-md text-gray-500">
-                    $ {formatMoney(total)}
+                    Rp {formatMoney(total)}
                   </span>
                 </div>
                 <div className="mb-6 flex justify-between">
                   <span className="text-md">Total:</span>
                   <span className="text-xl font-medium text-yellow-600">
-                    $ {formatMoney(total)}
+                    Rp {formatMoney(total)}
                   </span>
                 </div>
                 <div className="flex justify-center pt-8">

@@ -7,7 +7,7 @@ import { TrophyIcon } from './icons/trophy'
 
 function BannerCertificates() {
   return (
-    <div className="bg-tertiary mt-8 flex min-h-56 items-center px-4 py-12 sm:px-6 lg:px-8">
+    <div className="mt-8 flex min-h-56 items-center bg-tertiary px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <div className="grid grid-cols-1 gap-y-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-20">
           <Feature
