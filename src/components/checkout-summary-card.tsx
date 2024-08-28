@@ -50,7 +50,6 @@ export function CheckoutSummaryCard({
         items: itemsFormated,
       })
 
-      console.log(result)
       const itensFormated = result.items.map((item) => {
         return {
           productSlug: item.product.slug,
