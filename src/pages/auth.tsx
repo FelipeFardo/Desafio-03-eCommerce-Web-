@@ -1,5 +1,6 @@
 import { ArrowLeft } from 'lucide-react'
 import { useState } from 'react'
+import { Helmet } from 'react-helmet-async'
 import { useNavigate } from 'react-router-dom'
 
 import loginImage from '@/assets/images/520fab60716f712257d7f6a7fc48a42f.jpeg'
@@ -12,84 +13,87 @@ export function Auth() {
   const [isRegister, setIsRegister] = useState<boolean>(false)
   const navigate = useNavigate()
   return (
-    <div className="flex min-h-screen">
-      <div className="flex w-full items-center justify-center md:w-1/2">
-        <div className="w-full max-w-md p-6">
-          {!isRegister && (
-            <h1 className="mb-6 text-3xl font-medium">Welcome back!</h1>
-          )}
-          {isRegister && (
-            <h1 className="mb-6 text-3xl font-medium">Get Started Now!</h1>
-          )}
+    <>
+      <Helmet title="Auth" />
+      <div className="flex min-h-screen">
+        <div className="flex w-full items-center justify-center md:w-1/2">
+          <div className="w-full max-w-md p-6">
+            {!isRegister && (
+              <h1 className="mb-6 text-3xl font-medium">Welcome back!</h1>
+            )}
+            {isRegister && (
+              <h1 className="mb-6 text-3xl font-medium">Get Started Now!</h1>
+            )}
 
-          <h2 className="mb-6">
-            Enter your Credentials to access your account
-          </h2>
+            <h2 className="mb-6">
+              Enter your Credentials to access your account
+            </h2>
 
-          {!isRegister && <SignInForm />}
-          {isRegister && <SignUpForm />}
-          <div className="relative flex items-center py-5">
-            <div className="flex-grow border-t border-gray-300"></div>
-            <span className="mx-4 flex-shrink text-gray-600">Or</span>
-            <div className="flex-grow border-t border-gray-300"></div>
-          </div>
-          <div className="mt-4 flex space-x-3 text-xs">
-            <button className="flex w-full items-center justify-center space-x-2 rounded-full  border border-gray-300 bg-white px-4 py-2 text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-lime-900 focus:ring-offset-2">
-              <GoogleIcon />
-              <span>Sign in with Google</span>
-            </button>
+            {!isRegister && <SignInForm />}
+            {isRegister && <SignUpForm />}
+            <div className="relative flex items-center py-5">
+              <div className="flex-grow border-t border-gray-300"></div>
+              <span className="mx-4 flex-shrink text-gray-600">Or</span>
+              <div className="flex-grow border-t border-gray-300"></div>
+            </div>
+            <div className="mt-4 flex space-x-3 text-xs">
+              <button className="flex w-full items-center justify-center space-x-2 rounded-full  border border-gray-300 bg-white px-4 py-2 text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-lime-900 focus:ring-offset-2">
+                <GoogleIcon />
+                <span>Sign in with Google</span>
+              </button>
 
-            <button className="flex w-full items-center  justify-center  space-x-2 rounded-full  border border-gray-300 bg-white px-4 py-2 text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-lime-900 focus:ring-offset-2">
-              <AppleIcon />
-              <span>Sign in with Apple</span>
-            </button>
-          </div>
-          {!isRegister && (
-            <div className="mt-4 flex w-full justify-center">
-              Don’t have an account?{' '}
+              <button className="flex w-full items-center  justify-center  space-x-2 rounded-full  border border-gray-300 bg-white px-4 py-2 text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-lime-900 focus:ring-offset-2">
+                <AppleIcon />
+                <span>Sign in with Apple</span>
+              </button>
+            </div>
+            {!isRegister && (
+              <div className="mt-4 flex w-full justify-center">
+                Don’t have an account?{' '}
+                <a
+                  onClick={() => {
+                    setIsRegister(true)
+                  }}
+                  className="cursor-pointer pl-2"
+                >
+                  {' '}
+                  Sign Up
+                </a>
+              </div>
+            )}
+            {isRegister && (
+              <div className="mt-4 flex w-full justify-center">
+                Have an account?{' '}
+                <a
+                  onClick={() => {
+                    setIsRegister(false)
+                  }}
+                  className="cursor-pointer pl-2"
+                >
+                  {' '}
+                  Sign In
+                </a>
+              </div>
+            )}
+            <div className="mt-4 flex justify-center">
               <a
                 onClick={() => {
-                  setIsRegister(true)
+                  navigate('/')
                 }}
-                className="cursor-pointer pl-2"
+                className="flex cursor-pointer space-x-2"
               >
-                {' '}
-                Sign Up
+                <ArrowLeft />
+                <span>Back to Home</span>
               </a>
             </div>
-          )}
-          {isRegister && (
-            <div className="mt-4 flex w-full justify-center">
-              Have an account?{' '}
-              <a
-                onClick={() => {
-                  setIsRegister(false)
-                }}
-                className="cursor-pointer pl-2"
-              >
-                {' '}
-                Sign In
-              </a>
-            </div>
-          )}
-          <div className="mt-4 flex justify-center">
-            <a
-              onClick={() => {
-                navigate('/')
-              }}
-              className="flex cursor-pointer space-x-2"
-            >
-              <ArrowLeft />
-              <span>Back to Home</span>
-            </a>
           </div>
         </div>
-      </div>
 
-      <div
-        className="hidden bg-cover bg-center md:block md:w-1/2"
-        style={{ backgroundImage: `url('${loginImage}')` }}
-      ></div>
-    </div>
+        <div
+          className="hidden bg-cover bg-center md:block md:w-1/2"
+          style={{ backgroundImage: `url('${loginImage}')` }}
+        ></div>
+      </div>
+    </>
   )
 }

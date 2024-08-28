@@ -1,5 +1,6 @@
 import * as AlertDialog from '@radix-ui/react-alert-dialog'
 import { Trash } from 'lucide-react'
+import { Helmet } from 'react-helmet-async'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
@@ -48,6 +49,7 @@ export function CartPage() {
   }
   return (
     <>
+      <Helmet title="Cart" />
       <Banner.Root>
         <Banner.Image imageUrl={bannerImage} />
         <Banner.Content className="flex space-y-4">

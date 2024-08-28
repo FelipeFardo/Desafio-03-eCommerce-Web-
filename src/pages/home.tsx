@@ -1,3 +1,5 @@
+import { Helmet } from 'react-helmet-async'
+
 import bannerImage from '@/assets/images/banner.jpeg'
 import * as Banner from '@/components/banner'
 import { BannerCertificates } from '@/components/banner-certificates'
@@ -8,6 +10,7 @@ import { ProductHome } from '@/components/product-home'
 export function HomePage() {
   return (
     <>
+      <Helmet title="Home" />
       <Banner.Root>
         <Banner.Image imageUrl={bannerImage} />
         <Banner.Content className="flex space-y-4">

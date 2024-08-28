@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
+import { Helmet } from 'react-helmet-async'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { getProductBySlug } from '@/api/get-product-by-slug'
@@ -22,6 +23,7 @@ export function ProductPage() {
   const product = result?.product
   return (
     <>
+      <Helmet title={productSlug} />
       <div className="mb-10 flex h-20 items-center space-x-3 bg-tertiary px-8 md:px-24">
         <span>Home</span>
         <span className="text-2xl">{'>'}</span>

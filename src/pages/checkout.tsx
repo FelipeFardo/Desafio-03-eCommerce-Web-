@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { LoaderCircle } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { Helmet } from 'react-helmet-async'
 import { Controller, useForm } from 'react-hook-form'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
@@ -176,6 +177,7 @@ export function CheckoutPage() {
 
   return (
     <>
+      <Helmet title="Checkout" />
       <Banner.Root>
         <Banner.Image imageUrl={bannerImage} />
         <Banner.Content className="flex space-y-4">

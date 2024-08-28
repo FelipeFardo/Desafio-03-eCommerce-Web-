@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
+import { Helmet } from 'react-helmet-async'
 import { useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
 
@@ -23,85 +24,89 @@ export function OrderPage() {
 
   const order = result?.order
   return (
-    <div className="mx-auto my-8 max-w-4xl rounded-lg border bg-white p-6 shadow-md">
-      <h1 className="mb-4 text-2xl font-semibold">Order details:</h1>
-      <div className="mb-6">
-        <h2 className="text-xl font-medium">Customer Information</h2>
-        <p>
-          <strong>Name:</strong> {order.firstName} {order.lastName}
-        </p>
+    <>
+      <Helmet title="Order" />
+      <div className="mx-auto my-8 max-w-4xl rounded-lg border bg-white p-6 shadow-md">
+        <h1 className="mb-4 text-2xl font-semibold">Order details:</h1>
+        <div className="mb-6">
+          <h2 className="text-xl font-medium">Customer Information</h2>
+          <p>
+            <strong>Name:</strong> {order.firstName} {order.lastName}
+          </p>
 
-        <p>
-          <strong>Company:</strong> {order.companyName || 'N/A'}
-        </p>
-        <p>
-          <strong>Email:</strong> {order.email}
-        </p>
-        <p>
-          <strong>Address:</strong> {order.streetAddress}, {order.addOnAddress},{' '}
-          {order.city}, {order.province}, {order.zipCode}, {order.country}
-        </p>
-        <p>
-          <strong>Additional Information:</strong>{' '}
-          {order.additionalInfo || 'N/A'}
-        </p>
-        <p>
-          <strong>Status:</strong> {order.status}
-        </p>
-      </div>
+          <p>
+            <strong>Company:</strong> {order.companyName || 'N/A'}
+          </p>
+          <p>
+            <strong>Email:</strong> {order.email}
+          </p>
+          <p>
+            <strong>Address:</strong> {order.streetAddress},{' '}
+            {order.addOnAddress}, {order.city}, {order.province},{' '}
+            {order.zipCode}, {order.country}
+          </p>
+          <p>
+            <strong>Additional Information:</strong>{' '}
+            {order.additionalInfo || 'N/A'}
+          </p>
+          <p>
+            <strong>Status:</strong> {order.status}
+          </p>
+        </div>
 
-      <div className="mb-6">
-        <h2 className="text-xl font-medium">Payment Information</h2>
-        <p>
-          <strong>Payment Method:</strong> {order.paymentMethod}
-        </p>
-        <p>
-          <strong>Total:</strong> Rp {formatMoney(order.totalInCents)}
-        </p>
-        <p>
-          <strong>Date of order:</strong>{' '}
-          {new Date(order.createdAt).toLocaleDateString()}
-        </p>
-      </div>
+        <div className="mb-6">
+          <h2 className="text-xl font-medium">Payment Information</h2>
+          <p>
+            <strong>Payment Method:</strong> {order.paymentMethod}
+          </p>
+          <p>
+            <strong>Total:</strong> Rp {formatMoney(order.totalInCents)}
+          </p>
+          <p>
+            <strong>Date of order:</strong>{' '}
+            {new Date(order.createdAt).toLocaleDateString()}
+          </p>
+        </div>
 
-      <div>
-        <h2 className="mb-4 text-xl font-medium">Order Itens</h2>
-        <div className="space-y-4">
-          {order.items.map((item) => (
-            <div key={item.id} className="rounded-lg border p-4">
-              <h3 className="text-lg font-semibold">{item.product.name}</h3>
-              <p>
-                <strong>Product slug:</strong> {item.product.slug}
-              </p>
-              <p>
-                <strong>Product name:</strong> {item.product.name}
-              </p>
-              <p>
-                <strong>SKU:</strong> {item.productVariant.sku}
-              </p>
-              <p>
-                <strong>Color:</strong> {item.productVariant.color.name}
-              </p>
-              <p>
-                <strong>Size:</strong> {item.productVariant.size.name}
-              </p>
-              <p>
-                <strong>Quantity:</strong> {item.quantity}
-              </p>
-              <p>
-                <strong>Price per Unit: </strong>
-                Rp {formatMoney(item.priceInCentsPerUnit)}
-              </p>
+        <div>
+          <h2 className="mb-4 text-xl font-medium">Order Itens</h2>
+          <div className="space-y-4">
+            {order.items.map((item) => (
+              <div key={item.id} className="rounded-lg border p-4">
+                <h3 className="text-lg font-semibold">{item.product.name}</h3>
+                <p>
+                  <strong>Product slug:</strong> {item.product.slug}
+                </p>
+                <p>
+                  <strong>Product name:</strong> {item.product.name}
+                </p>
+                <p>
+                  <strong>SKU:</strong> {item.productVariant.sku}
+                </p>
+                <p>
+                  <strong>Color:</strong> {item.productVariant.color.name}
+                </p>
+                <p>
+                  <strong>Size:</strong> {item.productVariant.size.name}
+                </p>
+                <p>
+                  <strong>Quantity:</strong> {item.quantity}
+                </p>
+                <p>
+                  <strong>Price per Unit: </strong>
+                  Rp {formatMoney(item.priceInCentsPerUnit)}
+                </p>
 
-              <p>
-                <strong>Subtotal:</strong> Rp{' '}
-                {formatMoney(item.subTotalInCents)}
-              </p>
-            </div>
-          ))}
+                <p>
+                  <strong>Subtotal:</strong> Rp{' '}
+                  {formatMoney(item.subTotalInCents)}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }
 
