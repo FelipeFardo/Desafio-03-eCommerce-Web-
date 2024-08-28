@@ -1,4 +1,5 @@
 import * as AlertDialog from '@radix-ui/react-alert-dialog'
+import * as ScrollArea from '@radix-ui/react-scroll-area'
 import { ShoppingCart, Trash } from 'lucide-react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
@@ -65,95 +66,109 @@ export function Cart() {
             Shopping Cart
           </SheetTitle>
         </SheetHeader>
-        <div className="flex h-full flex-col justify-between pb-10">
-          <div className="py-4">
-            {items.map((item) => {
-              return (
-                <div
-                  key={item.sku}
-                  className="mt-4 flex justify-between space-x-3"
-                >
-                  <div>
-                    <button
-                      className="flex"
-                      onClick={() =>
-                        redirectoToProduct(
-                          `/product/${item.productSlug}?sku=${item.sku}`,
-                        )
-                      }
-                    >
-                      <Image
-                        src={item.imageUrl}
-                        width={100}
-                        alt={item.name}
-                        className="rounded-2xl"
-                      />
-                      <div className="flex flex-col">
-                        <div className="flex flex-col items-start space-y-2 pl-8">
-                          <h3 className="text-lg font-medium">{item.name}</h3>
-                          <h4 className="space-x-2">
-                            <span>{item.quantity} </span>
-                            <span>x</span>
-                            <span className="pl-4 text-yellow-600">
-                              Rp {formatMoney(item.priceInCents)}
-                            </span>
-                          </h4>
-                        </div>
-                        <div className="flex flex-col pl-8">
-                          <h4 className="flex items-center gap-2 text-sm text-gray-500 ">
-                            color:
-                            <span>{item.colorName}</span>
-                            <span
-                              className={cn(
-                                'flex h-4 w-4 rounded-full border-2 border-black',
-                              )}
-                              style={{ backgroundColor: item.hexCode }}
-                            />
-                          </h4>
-                          <h4 className="flex text-sm text-gray-500 ">
-                            size: {item.sizeName}
-                          </h4>
-                        </div>
-                      </div>
-                    </button>
-                  </div>
 
-                  <div className="px-4 py-1">
-                    <AlertDialog.Root>
-                      <AlertDialog.Trigger asChild className="cursor-pointer">
-                        <Trash className="text-yellow-900" />
-                      </AlertDialog.Trigger>
-                      <AlertDialog.Portal>
-                        <AlertDialog.Content className="data-[state=open]:animate-scaleIn fixed left-[50%] top-[50%] z-50  max-h-[85vh] w-[90vw] max-w-[500px] translate-x-[-50%] translate-y-[-50%] rounded-2xl border-2 border-yellow-900  bg-white p-6 shadow-xl focus:outline-none">
-                          <AlertDialog.Title className="mb-2 text-xl font-semibold text-gray-900">
-                            Do you want to remove item from cart?
-                          </AlertDialog.Title>
-                          <AlertDialog.Description className="mb-5 mt-2 text-sm leading-normal text-gray-600"></AlertDialog.Description>
-                          <div className="flex justify-end gap-4">
-                            <AlertDialog.Cancel asChild>
-                              <button className="rounded-xl bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2">
-                                Cancel
-                              </button>
-                            </AlertDialog.Cancel>
-                            <AlertDialog.Action asChild>
-                              <button
-                                onClick={() => removeItemToCart(item.sku)}
-                                className="rounded-xl bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-                              >
-                                Remove
-                              </button>
-                            </AlertDialog.Action>
+        <div className="flex h-full flex-col justify-between pb-10">
+          <ScrollArea.Root className="overflow-hidden">
+            <ScrollArea.Viewport className="h-full w-full rounded">
+              <div className="py-4">
+                {items.map((item) => {
+                  return (
+                    <div
+                      key={item.sku}
+                      className="mt-4 flex justify-between space-x-3"
+                    >
+                      <div>
+                        <button
+                          className="flex"
+                          onClick={() =>
+                            redirectoToProduct(
+                              `/product/${item.productSlug}?sku=${item.sku}`,
+                            )
+                          }
+                        >
+                          <Image
+                            src={item.imageUrl}
+                            width={100}
+                            alt={item.name}
+                            className="rounded-2xl"
+                          />
+                          <div className="flex flex-col">
+                            <div className="flex flex-col items-start space-y-2 pl-8">
+                              <h3 className="text-lg font-medium">
+                                {item.name}
+                              </h3>
+                              <h4 className="space-x-2">
+                                <span>{item.quantity} </span>
+                                <span>x</span>
+                                <span className="pl-4 text-yellow-600">
+                                  Rp {formatMoney(item.priceInCents)}
+                                </span>
+                              </h4>
+                            </div>
+                            <div className="flex flex-col pl-8">
+                              <h4 className="flex items-center gap-2 text-sm text-gray-500 ">
+                                color:
+                                <span>{item.colorName}</span>
+                                <span
+                                  className={cn(
+                                    'flex h-4 w-4 rounded-full border-2 border-black',
+                                  )}
+                                  style={{ backgroundColor: item.hexCode }}
+                                />
+                              </h4>
+                              <h4 className="flex text-sm text-gray-500 ">
+                                size: {item.sizeName}
+                              </h4>
+                            </div>
                           </div>
-                        </AlertDialog.Content>
-                      </AlertDialog.Portal>
-                    </AlertDialog.Root>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
+                        </button>
+                      </div>
+
+                      <div className="px-4 py-1">
+                        <AlertDialog.Root>
+                          <AlertDialog.Trigger
+                            asChild
+                            className="cursor-pointer"
+                          >
+                            <Trash className="text-yellow-900" />
+                          </AlertDialog.Trigger>
+                          <AlertDialog.Portal>
+                            <AlertDialog.Content className="data-[state=open]:animate-scaleIn fixed left-[50%] top-[50%] z-50  max-h-[85vh] w-[90vw] max-w-[500px] translate-x-[-50%] translate-y-[-50%] rounded-2xl border-2 border-yellow-900  bg-white p-6 shadow-xl focus:outline-none">
+                              <AlertDialog.Title className="mb-2 text-xl font-semibold text-gray-900">
+                                Do you want to remove item from cart?
+                              </AlertDialog.Title>
+                              <AlertDialog.Description className="mb-5 mt-2 text-sm leading-normal text-gray-600"></AlertDialog.Description>
+                              <div className="flex justify-end gap-4">
+                                <AlertDialog.Cancel asChild>
+                                  <button className="rounded-xl bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2">
+                                    Cancel
+                                  </button>
+                                </AlertDialog.Cancel>
+                                <AlertDialog.Action asChild>
+                                  <button
+                                    onClick={() => removeItemToCart(item.sku)}
+                                    className="rounded-xl bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                                  >
+                                    Remove
+                                  </button>
+                                </AlertDialog.Action>
+                              </div>
+                            </AlertDialog.Content>
+                          </AlertDialog.Portal>
+                        </AlertDialog.Root>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </ScrollArea.Viewport>
+            <ScrollArea.Scrollbar orientation="vertical">
+              <ScrollArea.Thumb />
+            </ScrollArea.Scrollbar>
+            <ScrollArea.Corner className="bg-blackA5" />
+          </ScrollArea.Root>
           <div>
-            <div className="flex justify-between pb-3">
+            <div className="flex justify-between border-t p-3">
               <h3>Sub total</h3>
               <span>Rp {formatMoney(total)}</span>
             </div>
