@@ -1,4 +1,5 @@
-import { LogIn, LogOut } from 'lucide-react'
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
+import { LogIn, LogOut, User2Icon } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 import furniroLogo from '@/assets/furniro.svg'
@@ -37,9 +38,25 @@ export function Header() {
         </nav>
         <nav className="flex w-32 space-x-8 lg:w-40">
           {isAuth && (
-            <button onClick={() => logout()} className="flex space-x-4">
-              <LogOut />
-            </button>
+            <>
+              <DropdownMenu.Root>
+                <DropdownMenu.Trigger>
+                  <User2Icon />
+                </DropdownMenu.Trigger>
+                <DropdownMenu.Portal>
+                  <DropdownMenu.Content className="mx-16 w-auto rounded-2xl border-2 border-yellow-900 bg-white  p-2 shadow-lg hover:bg-yellow-900 hover:text-white">
+                    <button
+                      onClick={() => logout()}
+                      className="flex space-x-4 "
+                    >
+                      <LogOut />
+                      <span>Logout</span>
+                    </button>
+                    <DropdownMenu.Arrow />
+                  </DropdownMenu.Content>
+                </DropdownMenu.Portal>
+              </DropdownMenu.Root>
+            </>
           )}
 
           {!isAuth && (
