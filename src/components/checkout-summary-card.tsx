@@ -57,7 +57,7 @@ export function CheckoutSummaryCard({
           name: item.product.name,
           colorName: item.variant.color.name,
           sizeName: item.variant.size.name,
-          color: item.variant.color.color,
+          hexCode: item.variant.color.hexCode,
           size: item.variant.size.size,
           quantityAvailable: item.quantityAvailable,
           priceInCents: item.variant.priceInCents,

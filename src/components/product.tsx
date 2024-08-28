@@ -15,6 +15,7 @@ import { ProductImages } from '@/components/product-images'
 import { useSheetCart } from '@/contexts/sheet-cart'
 import { cn } from '@/lib/utils'
 import { formatMoney } from '@/utis/formatMoney'
+import { sorteSizes } from '@/utis/sorte-sizes'
 
 import { ProductSkeleton } from './product-skeleton'
 
@@ -36,7 +37,7 @@ export function Product() {
     isNew: boolean
     sizeName: string
     colorId: string
-    color: string
+    hexCode: string
     colorName: string
     sku: string
     quantity: number
@@ -67,7 +68,7 @@ export function Product() {
           ) {
             setVariantSelect({
               ...variant,
-              color: colorDefault.color,
+              hexCode: colorDefault.hexCode,
               colorName: colorDefault.name,
               size: sizeDefault.size,
               sizeName: sizeDefault.name,
@@ -85,7 +86,7 @@ export function Product() {
           )[0]
           setVariantSelect({
             ...variant,
-            color: colorSelect.color,
+            hexCode: colorSelect.hexCode,
             colorName: colorSelect.name,
             size: sizeSelect.size,
             sizeName: sizeSelect.name,
@@ -113,7 +114,7 @@ export function Product() {
               isNew: variant.isNew,
               oldPriceInCents: variant.oldPriceInCents,
               discount: variant.discount,
-              color: colorSelect.color,
+              hexCode: colorSelect.hexCode,
               colorName: colorSelect.name,
               size: sizeSelect.size,
               sizeName: sizeSelect.name,
@@ -137,7 +138,7 @@ export function Product() {
           imageUrl: product?.images[0].url,
           quantityAvailable: variantSelect.quantity,
           name: product?.name,
-          color: variantSelect.color,
+          hexCode: variantSelect.hexCode,
           colorName: variantSelect.colorName,
           size: variantSelect.size,
           sizeName: variantSelect.sizeName,
@@ -164,7 +165,7 @@ export function Product() {
           setVariantSelect({
             ...variant,
             size,
-            color: variantSelect.color,
+            hexCode: variantSelect.hexCode,
             colorName: variantSelect.colorName,
             sizeName,
           })
@@ -173,7 +174,7 @@ export function Product() {
     }
   }
 
-  function handleColorId(colorId: string, color: string, colorName: string) {
+  function handleColorId(colorId: string, hexCode: string, colorName: string) {
     if (product) {
       product.variants.forEach((variant) => {
         if (
@@ -186,7 +187,7 @@ export function Product() {
           })
           setVariantSelect({
             ...variant,
-            color,
+            hexCode,
             size: variantSelect.size,
             sizeName: variantSelect.sizeName,
             colorName,
@@ -245,7 +246,7 @@ export function Product() {
           <div className="mb-4">
             <span className="mb-2 block text-gray-700">Size:</span>
             <div className="flex space-x-4">
-              {product?.sizes.map(({ id, size, name }) => (
+              {sorteSizes(product?.sizes || []).map(({ id, size, name }) => (
                 <Button
                   key={size}
                   variant="secondary"
@@ -265,7 +266,7 @@ export function Product() {
           <div className="mb-4">
             <span className="mb-2 block text-gray-700">Color:</span>
             <div className="flex space-x-4">
-              {product?.colors.map(({ id, color, name }) => (
+              {product?.colors.map(({ id, hexCode, name }) => (
                 <Button
                   key={id}
                   variant="secondary"
@@ -275,8 +276,8 @@ export function Product() {
                       ? 'border-2 border-yellow-800 '
                       : 'border-2 border-black opacity-40',
                   )}
-                  style={{ backgroundColor: color }}
-                  onClick={() => handleColorId(id, color, name)}
+                  style={{ backgroundColor: hexCode }}
+                  onClick={() => handleColorId(id, hexCode, name)}
                 ></Button>
               ))}
             </div>

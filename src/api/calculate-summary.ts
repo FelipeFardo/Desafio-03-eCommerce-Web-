@@ -8,55 +8,6 @@ interface CalculateSummaryRequest {
   }[]
 }
 
-// interface CalculateSummaryResponse {
-//   items: {
-//     quantity: number
-//     subTotal: number
-//     quantityAvailable: number
-//     variant: {
-//       id: string
-//       productId: string
-//       sizeId: string
-//       colorId: string
-//       sku: string
-//       size: {
-//         id: string
-//         productId: string
-//         name: string
-//         size: string
-//       }
-//       color: {
-//         id: string
-//         productId: string
-//         name: string
-//         color: string
-//       }
-//     }
-//     product: {
-//       oldPrice: number
-//       id: string
-//       name: string
-//       slug: string
-//       description: string
-//       categoryId: string
-//       discount: number
-//       priceInCents: number
-//       createdAt: Date
-//       images: {
-//         id: string
-//         title: string
-//         url: string
-//         productId: string
-//       }[]
-//     }
-//   }[]
-//   total: number
-//   message: {
-//     messages: string[]
-//     type: 'error'
-//   } | null
-// }
-
 interface CalculateSummaryResponse {
   items: {
     quantityAvailable: number
@@ -88,7 +39,7 @@ interface CalculateSummaryResponse {
         id: string
         productId: string
         name: string
-        color: string
+        hexCode: string
       }
       size: {
         id: string

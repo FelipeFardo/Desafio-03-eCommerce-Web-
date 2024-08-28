@@ -19,7 +19,7 @@ interface GetProductsResponse {
       id: string
       productId: string
       name: string
-      color: string
+      hexCode: string
     }
     size: {
       id: string
@@ -38,7 +38,7 @@ interface GetProductsResponse {
         id: string
         productId: string
         name: string
-        color: string
+        hexCode: string
       }[]
       sizes: {
         id: string

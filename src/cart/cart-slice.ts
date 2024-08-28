@@ -5,7 +5,7 @@ interface CartItem {
   productSlug: string
   sku: string
   name: string
-  color: string
+  hexCode: string
   size: string
   colorName: string
   sizeName: string
@@ -51,7 +51,7 @@ const cartSlice = createSlice({
         productSlug: string
         sku: string
         name: string
-        color: string
+        hexCode: string
         colorName: string
         sizeName: string
         size: string
@@ -136,7 +136,7 @@ const cartSlice = createSlice({
           productSlug: string
           sku: string
           name: string
-          color: string
+          hexCode: string
           colorName: string
           size: string
           sizeName: string
@@ -157,7 +157,7 @@ const cartSlice = createSlice({
 
       items.forEach((item) => {
         state.items.push({
-          color: item.color,
+          hexCode: item.hexCode,
           imageUrl: item.imageUrl,
           name: item.name,
           colorName: item.colorName,

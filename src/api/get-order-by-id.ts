@@ -49,7 +49,7 @@ interface getOrderByIdResponse {
             id: string
             productId: string
             name: string
-            color: string
+            hexCode: string
           }
           size: {
             id: string

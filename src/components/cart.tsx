@@ -107,7 +107,7 @@ export function Cart() {
                               className={cn(
                                 'flex h-4 w-4 rounded-full border-2 border-black',
                               )}
-                              style={{ backgroundColor: item.color }}
+                              style={{ backgroundColor: item.hexCode }}
                             />
                           </h4>
                           <h4 className="flex text-sm text-gray-500 ">

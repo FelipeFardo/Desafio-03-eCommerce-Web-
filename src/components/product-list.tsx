@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils'
+import { sorteSizes } from '@/utis/sorte-sizes'
 
 import * as ProductCard from './product-card'
 
@@ -14,7 +15,7 @@ interface CollectionProductsProps {
       id: string
       productId: string
       name: string
-      color: string
+      hexCode: string
     }
     size: {
       id: string
@@ -33,7 +34,7 @@ interface CollectionProductsProps {
         id: string
         productId: string
         name: string
-        color: string
+        hexCode: string
       }[]
       sizes: {
         id: string
@@ -77,7 +78,7 @@ export function CollectionProducts({
             <ProductCard.Title name={productVariant.product.name} />
             <div className="space-y-2 pb-2">
               <div className="flex space-x-4">
-                {productVariant.product.sizes.map((size) => {
+                {sorteSizes(productVariant.product.sizes).map((size) => {
                   return (
                     <span
                       key={size.size}
@@ -97,14 +98,14 @@ export function CollectionProducts({
                 {productVariant.product.colors.map((color) => {
                   return (
                     <span
-                      key={color.color}
+                      key={color.hexCode}
                       className={cn(
                         'h-6 w-6 rounded-full border-2 border-black ',
                         color.id === productVariant.colorId
                           ? 'opacity-100'
                           : 'opacity-40',
                       )}
-                      style={{ backgroundColor: color.color }}
+                      style={{ backgroundColor: color.hexCode }}
                     ></span>
                   )
                 })}
