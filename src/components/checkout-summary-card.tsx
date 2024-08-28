@@ -129,7 +129,7 @@ export function CheckoutSummaryCard({
                     </h4>
                   </div>
                 </div>
-                <span>Rp{formatMoney(item.subTotal)}</span>
+                <span>Rp {formatMoney(item.subTotal)}</span>
               </li>
             )
           })}
@@ -137,12 +137,12 @@ export function CheckoutSummaryCard({
       <div className="text-md mb-4 flex justify-between">
         <span>Subtotal</span>
 
-        <span>Rp{formatMoney(total!)}</span>
+        <span>Rp {formatMoney(total!)}</span>
       </div>
       <div className="text-md flex justify-between border-b-2 pb-4">
         <span>Total</span>
         <span className="text-2xl text-yellow-600">
-          Rp{formatMoney(total!)}
+          Rp {formatMoney(total!)}
         </span>
       </div>
     </div>
