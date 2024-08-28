@@ -10,7 +10,10 @@ interface AuthContextType {
     email: string
     name: string
   } | null
-  login: (props: { email: string; password: string }) => void
+  login: (props: {
+    email: string
+    password: string
+  }) => Promise<{ accessToken: string }>
   logout: () => void
 }
 

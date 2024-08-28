@@ -81,9 +81,7 @@ const cartSlice = createSlice({
         existingItem.subTotal +=
           action.payload.quantity * action.payload.priceInCents
         state.total += action.payload.quantity * action.payload.priceInCents
-        toast.success(
-          `${action.payload.name} has been successfully added to your cart!`,
-        )
+
         localStorage.setItem('cart', JSON.stringify(state))
         return
       }
@@ -96,9 +94,6 @@ const cartSlice = createSlice({
       state.total += action.payload.quantity * action.payload.priceInCents
 
       localStorage.setItem('cart', JSON.stringify(state))
-      toast.success(
-        `${action.payload.name} has been successfully added to your cart!`,
-      )
     },
     removeFromCart: (state, action: PayloadAction<{ sku: string }>) => {
       const existingItem = state.items.find(

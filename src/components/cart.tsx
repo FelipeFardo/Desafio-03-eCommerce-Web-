@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 
 import { removeFromCart } from '@/cart/cart-slice'
 import { useSheetCart } from '@/contexts/sheet-cart'
+import { cn } from '@/lib/utils'
 import { formatMoney } from '@/utis/formatMoney'
 
 import { RootState } from '../cart/store'
@@ -67,31 +68,51 @@ export function Cart() {
                   key={item.sku}
                   className="mt-4 flex justify-between space-x-3"
                 >
-                  <button
-                    className="flex"
-                    onClick={() =>
-                      redirectoToProduct(
-                        `/product/${item.productSlug}?variant=${item.sku}`,
-                      )
-                    }
-                  >
-                    <img
-                      src={item.imageUrl}
-                      width={100}
-                      alt={item.name}
-                      className="rounded-2xl"
-                    />
-                    <div className="flex flex-col items-start space-y-2 pl-8">
-                      <h3 className="text-lg font-medium">{item.name}</h3>
-                      <h4 className="space-x-2">
-                        <span>{item.quantity} </span>
-                        <span>x</span>
-                        <span className="pl-4 text-yellow-600">
-                          R$ {formatMoney(item.priceInCents)}
-                        </span>
-                      </h4>
-                    </div>
-                  </button>
+                  <div>
+                    <button
+                      className="flex"
+                      onClick={() =>
+                        redirectoToProduct(
+                          `/product/${item.productSlug}?sku=${item.sku}`,
+                        )
+                      }
+                    >
+                      <img
+                        src={item.imageUrl}
+                        width={100}
+                        alt={item.name}
+                        className="rounded-2xl"
+                      />
+                      <div className="flex flex-col">
+                        <div className="flex flex-col items-start space-y-2 pl-8">
+                          <h3 className="text-lg font-medium">{item.name}</h3>
+                          <h4 className="space-x-2">
+                            <span>{item.quantity} </span>
+                            <span>x</span>
+                            <span className="pl-4 text-yellow-600">
+                              Rp {formatMoney(item.priceInCents)}
+                            </span>
+                          </h4>
+                        </div>
+                        <div className="flex flex-col pl-8">
+                          <h4 className="flex items-center gap-2 text-sm text-gray-500 ">
+                            color:
+                            <span>{item.colorName}</span>
+                            <span
+                              className={cn(
+                                'flex h-4 w-4 rounded-full border-2 border-black',
+                              )}
+                              style={{ backgroundColor: item.color }}
+                            />
+                          </h4>
+                          <h4 className="flex text-sm text-gray-500 ">
+                            size: {item.sizeName}
+                          </h4>
+                        </div>
+                      </div>
+                    </button>
+                  </div>
+
                   <div className="px-4 py-1">
                     <AlertDialog.Root>
                       <AlertDialog.Trigger asChild className="cursor-pointer">
@@ -136,18 +157,30 @@ export function Cart() {
               <button
                 disabled={!items.length}
                 onClick={redirectToCart}
-                className="w-20 rounded-3xl border px-3 py-2 hover:bg-yellow-900 hover:text-white disabled:cursor-not-allowed disabled:text-gray-500"
+                className={cn(
+                  'w-20 rounded-3xl border px-3 py-2  disabled:cursor-not-allowed disabled:text-gray-500',
+                  items.length ? 'hover:bg-yellow-900 hover:text-white' : '',
+                )}
               >
                 Cart
               </button>
               <button
                 disabled={!items.length}
                 onClick={redirectToChekout}
-                className="w-36 rounded-3xl border px-3 py-2 hover:bg-yellow-900 hover:text-white disabled:cursor-not-allowed disabled:text-gray-500"
+                className={cn(
+                  'w-36 rounded-3xl border px-3 py-2  disabled:cursor-not-allowed disabled:text-gray-500',
+                  items.length ? 'hover:bg-yellow-900 hover:text-white' : '',
+                )}
               >
                 Checkout
               </button>
-              <button className="w-36 rounded-3xl border px-3 py-2 hover:bg-yellow-900 hover:text-white disabled:cursor-not-allowed disabled:text-gray-500">
+              <button
+                disabled={!items.length}
+                className={cn(
+                  'w-36 rounded-3xl border px-3 py-2  disabled:cursor-not-allowed disabled:text-gray-500',
+                  items.length ? 'hover:bg-yellow-900 hover:text-white' : '',
+                )}
+              >
                 Comparison
               </button>
             </nav>

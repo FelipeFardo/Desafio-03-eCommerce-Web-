@@ -32,13 +32,15 @@ export function ProductHome() {
     },
   })
 
-  const products = result?.products
+  const productVariants = result?.products
 
   return (
     <>
       <div className="mx-auto mt-10 flex max-w-[1500px] flex-wrap justify-center gap-8">
         {isLoadingProducts && <CollectionProductsSkeleton qtd={perPage} />}
-        {products && <CollectionProducts products={products} />}
+        {productVariants && (
+          <CollectionProducts productVariants={productVariants} />
+        )}
       </div>
     </>
   )

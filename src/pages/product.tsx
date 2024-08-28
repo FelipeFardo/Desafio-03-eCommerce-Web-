@@ -22,7 +22,7 @@ export function ProductPage() {
   const product = result?.product
   return (
     <>
-      <div className="bg-tertiary mb-10 flex h-20 items-center space-x-3 px-8 md:px-24">
+      <div className="mb-10 flex h-20 items-center space-x-3 bg-tertiary px-8 md:px-24">
         <span>Home</span>
         <span className="text-2xl">{'>'}</span>
         <span>Shop</span>

@@ -25,6 +25,7 @@ interface getOrderByIdResponse {
         productVariantId: string
         orderId: string
         quantity: number
+        priceInCentsPerUnit: number
         subTotalInCents: number
         product: {
           id: string
@@ -43,6 +44,18 @@ interface getOrderByIdResponse {
           colorId: string
           sku: string
           quantity: number
+          color: {
+            id: string
+            productId: string
+            name: string
+            color: string
+          }
+          size: {
+            id: string
+            productId: string
+            name: string
+            size: string
+          }
         }
       },
     ]

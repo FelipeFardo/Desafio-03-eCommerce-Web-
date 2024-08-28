@@ -3,14 +3,10 @@ import { api } from './api-client'
 interface GetProductBySlugResponse {
   product: {
     id: string
-    isNew: boolean
-    priceInCents: number
-    oldPriceInCents: number | null
     name: string
     slug: string
     description: string
     categoryId: string
-    discount: number
     createdAt: Date
     tags: string[]
     category: {
@@ -37,6 +33,10 @@ interface GetProductBySlugResponse {
       colorId: string
       sku: string
       quantity: number
+      discount: number | null
+      oldPriceInCents: number | null
+      priceInCents: number
+      isNew: boolean
     }[]
     images: {
       id: string

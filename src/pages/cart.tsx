@@ -53,7 +53,7 @@ export function CartPage() {
       <div className="container mx-auto p-6">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
           <div className="md:col-span-2">
-            <div className="bg-tertiary flex items-end justify-center space-x-10 rounded-lg py-4 shadow-lg sm:space-x-20 md:space-x-16 xl:space-x-36">
+            <div className="flex items-end justify-center space-x-10 rounded-lg bg-tertiary py-4 shadow-lg sm:space-x-20 md:space-x-16 xl:space-x-36">
               <h3 className="text-md font-medium">Product</h3>
               <h3 className="text-md font-medium">Price</h3>
               <h3 className="text-md font-medium">Quantity</h3>
@@ -67,9 +67,7 @@ export function CartPage() {
                 >
                   <button
                     onClick={() => {
-                      navigate(
-                        `/product/${item.productSlug}?variant=${item.sku}`,
-                      )
+                      navigate(`/product/${item.productSlug}?sku=${item.sku}`)
                       window.scrollTo(0, 0)
                     }}
                     className="flex w-20  space-x-4 lg:w-32"
@@ -173,7 +171,7 @@ export function CartPage() {
             })}
           </div>
           <div>
-            <div className="bg-tertiary rounded-lg p-6 shadow-lg">
+            <div className="rounded-lg bg-tertiary p-6 shadow-lg">
               <h2 className="mb-4 flex justify-center text-2xl font-semibold">
                 Cart totals
               </h2>

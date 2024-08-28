@@ -83,17 +83,20 @@ export function Content({ children }: ContentProps) {
 
 interface CardHoverProps {
   productSlug: string
+  sku: string
 }
 
-export function CardHover({ productSlug }: CardHoverProps) {
+export function CardHover({ productSlug, sku }: CardHoverProps) {
   const navigate = useNavigate()
 
   const handleButtonClick = () => {
-    navigate(`/product/${productSlug}`, { unstable_viewTransition: true })
+    navigate(`/product/${productSlug}?sku=${sku}`, {
+      unstable_viewTransition: true,
+    })
     window.scrollTo(0, 0)
   }
   return (
-    <div className="absolute inset-0 flex flex-col  items-center justify-center gap-8 bg-black bg-opacity-50 text-white opacity-0 transition-opacity duration-300 ease-in-out hover:opacity-100 group-hover:block">
+    <div className="absolute inset-0 z-10 flex flex-col  items-center justify-center gap-8 bg-black bg-opacity-50 text-white opacity-0 transition-opacity duration-300 ease-in-out hover:opacity-100 group-hover:block">
       <button
         onClick={handleButtonClick}
         className="hover:bg-color-hover cursor-pointer border bg-white px-12 py-2.5 text-lg text-[#B88E2F] transition-colors duration-300 ease-in-out"

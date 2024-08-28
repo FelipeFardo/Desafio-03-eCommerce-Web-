@@ -1,14 +1,16 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect } from 'react'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { LoaderCircle } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { useDispatch, useSelector } from 'react-redux'
+import toast from 'react-hot-toast'
+import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 
 import { finishSale } from '@/api/finish-sale'
 import { getCep } from '@/api/via-cep'
 import bannerImage from '@/assets/images/banner.jpeg'
-import { resetCart } from '@/cart/cart-slice'
 import type { RootState } from '@/cart/store'
 import * as Banner from '@/components/banner'
 import { CheckoutSummaryCard } from '@/components/checkout-summary-card'
@@ -45,13 +47,18 @@ const checkoutSchema = z.object({
 type FormData = z.infer<typeof checkoutSchema>
 
 export function CheckoutPage() {
+  const [message, setMessage] = useState<{
+    message: string[]
+    type: 'success' | 'error'
+  } | null>(null)
   const { isAuth, user } = useAuth()
   const { items } = useSelector((state: RootState) => state.cart)
   const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const queryClient = useQueryClient()
+
   useEffect(() => {
     if (!isAuth) navigate('/auth')
-  })
+  }, [isAuth, navigate])
 
   const {
     register,
@@ -81,6 +88,16 @@ export function CheckoutPage() {
     }
     getUserProfile()
   }, [setValue, user])
+
+  function handleMessage(
+    data: {
+      messages: string[]
+      type: 'success' | 'error'
+    } | null,
+  ) {
+    if (data) setMessage({ message: data.messages, type: data.type })
+    else setMessage(null)
+  }
 
   async function autoCompleteAddressByZipCode(zipCode: string) {
     if (zipCode.length === 8) {
@@ -115,6 +132,23 @@ export function CheckoutPage() {
     autoCompleteAddressByZipCode(zipCode)
   }
 
+  const { mutate, isPending } = useMutation({
+    mutationFn: finishSale,
+
+    onSuccess: (data) => {
+      navigate(`/order/${data.orderId}`)
+      window.scrollTo(0, 0)
+    },
+    onError: () => {
+      queryClient.invalidateQueries({ queryKey: ['summary'] })
+
+      handleMessage({
+        messages: ['Sorry, there was an error processing your purchase.'],
+        type: 'error',
+      })
+    },
+  })
+
   const onSubmit = async (data: FormData) => {
     const itemsFormated = items.map((item) => {
       return {
@@ -124,26 +158,21 @@ export function CheckoutPage() {
       }
     })
 
-    try {
-      const { orderId } = await finishSale({
-        addOnAddress: data.addOnAddress,
-        city: data.city,
-        country: data.country,
-        email: data.email,
-        firstName: data.firstName,
-        lastName: data.lastName,
-        paymentMethod: data.paymentMethod,
-        province: data.province,
-        streetAddress: data.streetAddress,
-        zipCode: data.zipCode,
-        additionalInfo: data.additionalInfo,
-        companyName: data.companyName,
-        items: itemsFormated,
-      })
-
-      navigate(`/order/${orderId}`)
-      dispatch(resetCart())
-    } catch (error) {}
+    mutate({
+      addOnAddress: data.addOnAddress,
+      city: data.city,
+      country: data.country,
+      email: data.email,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      paymentMethod: data.paymentMethod,
+      province: data.province,
+      streetAddress: data.streetAddress,
+      zipCode: data.zipCode,
+      additionalInfo: data.additionalInfo,
+      companyName: data.companyName,
+      items: itemsFormated,
+    })
   }
 
   return (
@@ -337,7 +366,10 @@ export function CheckoutPage() {
             </div>
           </div>
           <div className="flex flex-col rounded-lg  bg-white  p-6 lg:w-1/2 lg:justify-normal">
-            <CheckoutSummaryCard />
+            <CheckoutSummaryCard
+              message={message}
+              handleMessage={handleMessage}
+            />
             <Controller
               name="paymentMethod"
               control={control}
@@ -389,10 +421,15 @@ export function CheckoutPage() {
             />
 
             <button
+              disabled={isPending}
               type="submit"
               className="mx-auto mt-6 flex w-56 justify-center rounded-2xl border-2 border-gray-600 px-4 py-2 text-black  hover:bg-yellow-900 hover:text-white"
             >
-              Place order
+              {isPending ? (
+                <LoaderCircle className="flex w-full animate-spin items-center" />
+              ) : (
+                'Place order'
+              )}
             </button>
           </div>
         </form>

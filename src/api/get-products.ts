@@ -10,21 +10,53 @@ interface GetProductRequest {
 interface GetProductsResponse {
   products: {
     id: string
-    isNew: boolean
-    priceInCents: number
-    oldPriceInCents: number | null
-    name: string
-    slug: string
-    description: string
-    category: string
-    discount: number
-    createdAt: Date
+    productId: string
+    sizeId: string
+    colorId: string
+    sku: string
+    quantity: 7
+    color: {
+      id: string
+      productId: string
+      name: string
+      color: string
+    }
+    size: {
+      id: string
+      productId: string
+      name: string
+      size: string
+    }
+    product: {
+      id: string
+      name: string
+      slug: string
+      description: string
+      categoryId: string
+      createdAt: string
+      colors: {
+        id: string
+        productId: string
+        name: string
+        color: string
+      }[]
+      sizes: {
+        id: string
+        productId: string
+        name: string
+        size: string
+      }[]
+    }
     image: {
       id: string
       title: string
       url: string
       productId: string
     }
+    discount: number | null
+    isNew: boolean
+    priceInCents: number
+    oldPriceInCents: number | null
   }[]
   meta: {
     pageIndex: number

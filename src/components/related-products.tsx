@@ -31,7 +31,7 @@ export function RelatedProducts({
   return (
     <>
       {isLoadingProducts && <CollectionProductsSkeleton qtd={perPage} />}
-      {products && <CollectionProducts products={result?.products} />}
+      {products && <CollectionProducts productVariants={result?.products} />}
     </>
   )
 }

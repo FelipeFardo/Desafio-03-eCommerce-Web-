@@ -1,4 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation } from '@tanstack/react-query'
+import { LoaderCircle } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -7,9 +9,14 @@ import { createAccount } from '@/api/create-account'
 
 const SignUpSchema = z
   .object({
-    name: z.string().refine((value) => value.split(' ').length > 1, {
-      message: 'Please, enter your full name',
-    }),
+    name: z
+      .string()
+      .refine((value) => value.split(' ').length > 1, {
+        message: 'Please, enter your full name',
+      })
+      .refine((value) => !/\d/.test(value), {
+        message: 'Name cannot contain numbers',
+      }),
     email: z
       .string()
       .email({ message: 'Please, provide a valid e-mail addresss.' }),
@@ -38,24 +45,30 @@ export function SignUpForm() {
     resolver: zodResolver(SignUpSchema),
   })
 
-  const onSubmit = async ({ email, name, password }: SignUpFormData) => {
-    try {
-      await createAccount({
-        email,
-        name,
-        password,
-      })
+  const { mutate, isPending } = useMutation({
+    mutationFn: createAccount,
+    onSuccess: () => {
       setAuthMessage({
         message:
           'Please confirm your account by clicking the link sent to your email.',
         type: 'success',
       })
-    } catch (error) {
+    },
+    onError: () => {
       setAuthMessage({
-        message: 'Unexpected error, try again in a few minutes.',
-        type: 'error',
+        message:
+          'Please confirm your account by clicking the link sent to your email.',
+        type: 'success',
       })
-    }
+    },
+  })
+
+  const onSubmit = async ({ email, name, password }: SignUpFormData) => {
+    mutate({
+      email,
+      name,
+      password,
+    })
   }
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -142,10 +155,15 @@ export function SignUpForm() {
         )}
       </div>
       <button
+        disabled={isPending}
         type="submit"
         className="w-full rounded-full bg-lime-900 px-4 py-2 text-sm text-white hover:bg-lime-950 focus:outline-none focus:ring-2 focus:ring-lime-950 focus:ring-offset-2"
       >
-        Sign up
+        {isPending ? (
+          <LoaderCircle className="flex w-full animate-spin items-center" />
+        ) : (
+          'Sign up'
+        )}
       </button>
     </form>
   )

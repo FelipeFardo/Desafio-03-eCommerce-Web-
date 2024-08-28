@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { calculateSummary } from '@/api/calculate-summary'
@@ -9,11 +9,23 @@ import { formatMoney } from '@/utis/formatMoney'
 
 import { CheckoutSummaryCardSkeleton } from './checkout-summary-card-skeleton'
 
-export function CheckoutSummaryCard() {
-  const [message, setMessage] = useState<{
+interface CheckoutSummaryCardProps {
+  message: {
     message: string[]
     type: 'success' | 'error'
-  } | null>()
+  } | null
+  handleMessage: (
+    params: {
+      messages: string[]
+      type: 'success' | 'error'
+    } | null,
+  ) => void
+}
+
+export function CheckoutSummaryCard({
+  handleMessage,
+  message,
+}: CheckoutSummaryCardProps) {
   const { items } = useSelector((state: RootState) => state.cart)
 
   const dispatch = useDispatch()
@@ -37,6 +49,8 @@ export function CheckoutSummaryCard() {
       const result = await calculateSummary({
         items: itemsFormated,
       })
+
+      console.log(result)
       const itensFormated = result.items.map((item) => {
         return {
           productSlug: item.product.slug,
@@ -47,15 +61,18 @@ export function CheckoutSummaryCard() {
           color: item.variant.color.color,
           size: item.variant.size.size,
           quantityAvailable: item.quantityAvailable,
-          priceInCents: item.product.priceInCents,
-          imageUrl: item.product.images[0].url,
+          priceInCents: item.variant.priceInCents,
+          imageUrl: item.product.image.url,
           quantity: item.quantity,
           subTotal: item.subTotal,
         }
       })
 
       dispatch(
-        updateCartToSummary({ items: itensFormated, total: result.total }),
+        updateCartToSummary({
+          items: itensFormated,
+          total: result.total,
+        }),
       )
 
       return result
@@ -64,14 +81,13 @@ export function CheckoutSummaryCard() {
 
   useEffect(() => {
     if (result?.message) {
-      setMessage({
-        message: result?.message?.messages,
+      handleMessage({
+        messages: result?.message?.messages,
         type: 'error',
       })
-    } else {
-      setMessage(null)
     }
-  }, [message, result])
+  }, [result, handleMessage])
+
   if (isLoadingCalculateSummary || isRefetchingCalculateSummary)
     return <CheckoutSummaryCardSkeleton />
 

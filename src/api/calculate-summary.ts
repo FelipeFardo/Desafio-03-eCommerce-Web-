@@ -8,53 +8,119 @@ interface CalculateSummaryRequest {
   }[]
 }
 
+// interface CalculateSummaryResponse {
+//   items: {
+//     quantity: number
+//     subTotal: number
+//     quantityAvailable: number
+//     variant: {
+//       id: string
+//       productId: string
+//       sizeId: string
+//       colorId: string
+//       sku: string
+//       size: {
+//         id: string
+//         productId: string
+//         name: string
+//         size: string
+//       }
+//       color: {
+//         id: string
+//         productId: string
+//         name: string
+//         color: string
+//       }
+//     }
+//     product: {
+//       oldPrice: number
+//       id: string
+//       name: string
+//       slug: string
+//       description: string
+//       categoryId: string
+//       discount: number
+//       priceInCents: number
+//       createdAt: Date
+//       images: {
+//         id: string
+//         title: string
+//         url: string
+//         productId: string
+//       }[]
+//     }
+//   }[]
+//   total: number
+//   message: {
+//     messages: string[]
+//     type: 'error'
+//   } | null
+// }
+
 interface CalculateSummaryResponse {
   items: {
-    quantity: number
-    subTotal: number
     quantityAvailable: number
+    product: {
+      image: {
+        id: string
+        title: string
+        url: string
+        productId: string
+      }
+      id: string
+      name: string
+      slug: string
+      description: string
+      categoryId: string
+      createdAt: Date
+    }
     variant: {
       id: string
       productId: string
       sizeId: string
       colorId: string
       sku: string
-      size: {
-        id: string
-        productId: string
-        name: string
-        size: string
-      }
+      quantity: number
+      discount: number | null
+      priceInCents: number
+      createdAt: Date
       color: {
         id: string
         productId: string
         name: string
         color: string
       }
-    }
-    product: {
-      oldPrice: number
-      id: string
-      name: string
-      slug: string
-      description: string
-      categoryId: string
-      discount: number
-      priceInCents: number
-      createdAt: Date
-      images: {
+      size: {
         id: string
-        title: string
-        url: string
         productId: string
-      }[]
+        name: string
+        size: string
+      }
+      product: {
+        id: string
+        name: string
+        slug: string
+        description: string
+        categoryId: string
+        createdAt: Date
+        images: [
+          {
+            id: string
+            title: string
+            url: string
+            productId: string
+          },
+        ]
+      }
     }
+    quantity: number
+    subTotal: number
   }[]
   total: number
   message: {
     messages: string[]
-    type: 'error'
-  } | null
+    type: 'error' | 'success'
+  }
 }
 
 export async function calculateSummary({ items }: CalculateSummaryRequest) {

@@ -21,15 +21,19 @@ import { ProductSkeleton } from './product-skeleton'
 export function Product() {
   const { productSlug } = useParams<{ productSlug: string }>()
   const [searchParams, setSearchParams] = useSearchParams()
-  const variantSearchParams = searchParams.get('variant')
+  const skuSearchParams = searchParams.get('sku')
   const dispatch = useDispatch()
   const { openSheetCart } = useSheetCart()
 
   const [variantSelect, setVariantSelect] = useState<{
     id: string
     productId: string
+    priceInCents: number
+    oldPriceInCents: number | null
+    discount: number | null
     sizeId: string
     size: string
+    isNew: boolean
     sizeName: string
     colorId: string
     color: string
@@ -56,36 +60,36 @@ export function Product() {
       const sizeDefault = result.product.sizes[0]
 
       result.product.variants.forEach((variant) => {
-        if (variantSearchParams) {
-          if (variantSearchParams === variant.sku) {
-            const colorSelect = result.product.colors.filter(
-              (color) => color.id === variant.colorId,
-            )[0]
-            const sizeSelect = result.product.sizes.filter(
-              (size) => size.id === variant.sizeId,
-            )[0]
-            setVariantSelect({
-              ...variant,
-              color: colorSelect.color,
-              colorName: colorSelect.name,
-              size: sizeSelect.size,
-              sizeName: sizeSelect.name,
-            })
-          }
-        } else {
+        if (!skuSearchParams) {
           if (
             variant.colorId === colorDefault.id &&
             variant.sizeId === sizeDefault.id
           ) {
             setVariantSelect({
               ...variant,
-
               color: colorDefault.color,
               colorName: colorDefault.name,
               size: sizeDefault.size,
               sizeName: sizeDefault.name,
             })
+            return
           }
+        }
+
+        if (skuSearchParams === variant.sku) {
+          const colorSelect = result.product.colors.filter(
+            (color) => color.id === variant.colorId,
+          )[0]
+          const sizeSelect = result.product.sizes.filter(
+            (size) => size.id === variant.sizeId,
+          )[0]
+          setVariantSelect({
+            ...variant,
+            color: colorSelect.color,
+            colorName: colorSelect.name,
+            size: sizeSelect.size,
+            sizeName: sizeSelect.name,
+          })
         }
       })
       return result
@@ -95,8 +99,8 @@ export function Product() {
   useEffect(() => {
     if (result) {
       result.product.variants.forEach((variant) => {
-        if (variantSearchParams) {
-          if (variantSearchParams === variant.sku) {
+        if (skuSearchParams) {
+          if (skuSearchParams === variant.sku) {
             const colorSelect = result.product.colors.filter(
               (color) => color.id === variant.colorId,
             )[0]
@@ -105,6 +109,10 @@ export function Product() {
             )[0]
             setVariantSelect({
               ...variant,
+              priceInCents: variant.priceInCents,
+              isNew: variant.isNew,
+              oldPriceInCents: variant.oldPriceInCents,
+              discount: variant.discount,
               color: colorSelect.color,
               colorName: colorSelect.name,
               size: sizeSelect.size,
@@ -115,13 +123,14 @@ export function Product() {
       })
     }
     setQtdToCart(1)
-  }, [variantSearchParams, result])
+  }, [skuSearchParams, result])
+
   if (isLoadingProducts) return <ProductSkeleton />
 
   const product = result?.product
 
   const handleAddItem = () => {
-    if (product && productSlug && variantSelect) {
+    if (product && variantSelect) {
       dispatch(
         addToCart({
           productSlug: productSlug!,
@@ -130,9 +139,9 @@ export function Product() {
           name: product?.name,
           color: variantSelect.color,
           colorName: variantSelect.colorName,
-          sizeName: variantSelect.sizeName,
           size: variantSelect.size,
-          priceInCents: product?.priceInCents,
+          sizeName: variantSelect.sizeName,
+          priceInCents: variantSelect?.priceInCents,
           quantity: qtdToCart,
           sku: variantSelect?.sku,
         }),
@@ -149,7 +158,7 @@ export function Product() {
           variantSelect?.colorId === variant.colorId
         ) {
           setSearchParams((prev) => {
-            prev.set('variant', variant.sku)
+            prev.set('sku', variant.sku)
             return prev
           })
           setVariantSelect({
@@ -172,7 +181,7 @@ export function Product() {
           variantSelect?.sizeId === variant.sizeId
         ) {
           setSearchParams((prev) => {
-            prev.set('variant', variant.sku)
+            prev.set('sku', variant.sku)
             return prev
           })
           setVariantSelect({
@@ -194,11 +203,30 @@ export function Product() {
     <div className="6 container mx-auto flex flex-wrap lg:flex-nowrap">
       {product && <ProductImages images={product?.images} />}
       <div className="mt-6 w-full pl-16">
-        <h1 className="text-2xl font-bold">{product?.name}</h1>
+        <div className="flex space-x-2">
+          <h1 className="text-2xl font-bold">{product?.name}</h1>
+          {variantSelect?.isNew && (
+            <span className="font-bold text-green-600">New</span>
+          )}
+        </div>
 
-        <p className="text-xl text-gray-800">
-          R$ {product?.priceInCents && formatMoney(product?.priceInCents)}
-        </p>
+        <div className="flex space-x-16">
+          <p className="text-xl text-gray-800">
+            Rp{' '}
+            {variantSelect?.priceInCents &&
+              formatMoney(variantSelect?.priceInCents)}
+          </p>
+          <div className="flex items-end space-x-2 text-sm font-medium">
+            <span className="text-gray-400  line-through">
+              {variantSelect?.oldPriceInCents &&
+                formatMoney(variantSelect?.oldPriceInCents)}
+            </span>
+            {variantSelect?.discount && (
+              <span className="text-red-500">- {variantSelect?.discount}%</span>
+            )}
+          </div>
+        </div>
+
         <div className="mt-2 flex items-center">
           <span className="flex w-24 text-yellow-500">
             <Star />

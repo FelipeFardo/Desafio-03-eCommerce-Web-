@@ -1,4 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation } from '@tanstack/react-query'
+import { LoaderCircle } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
@@ -28,13 +30,9 @@ export function SignInForm() {
     resolver: zodResolver(SignInSchema),
   })
 
-  const onSubmit = async ({ email, password }: SignInFormData) => {
-    try {
-      login({
-        email,
-        password,
-      })
-
+  const { mutate, isPending } = useMutation({
+    mutationFn: login,
+    onSuccess: () => {
       setAuthMessage({
         message: 'Login Successfuly',
         type: 'success',
@@ -42,13 +40,22 @@ export function SignInForm() {
       setTimeout(() => {
         navigate('/')
       }, 2000)
-    } catch (e) {
+    },
+    onError: () => {
       setAuthMessage({
         message: 'Invalid credentials',
         type: 'error',
       })
-    }
+    },
+  })
+
+  const onSubmit = async ({ email, password }: SignInFormData) => {
+    mutate({
+      email,
+      password,
+    })
   }
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       {authMessage?.type === 'error' && (
@@ -100,10 +107,15 @@ export function SignInForm() {
         )}
       </div>
       <button
+        disabled={isPending}
         type="submit"
         className="w-full rounded-full bg-lime-900 px-4 py-2 text-white hover:bg-lime-950 focus:outline-none focus:ring-2 focus:ring-lime-950 focus:ring-offset-2"
       >
-        Login
+        {isPending ? (
+          <LoaderCircle className="flex w-full animate-spin items-center" />
+        ) : (
+          'Login'
+        )}
       </button>
     </form>
   )
