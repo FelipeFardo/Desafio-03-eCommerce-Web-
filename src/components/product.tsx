@@ -244,7 +244,7 @@ export function Product() {
 
         <div className="mt-4">
           <div className="mb-4">
-            <span className="mb-2 block text-gray-700">Size:</span>
+            <span className="mb-2 block text-gray-700">Size</span>
             <div className="flex space-x-4">
               {sorteSizes(product?.sizes || []).map(({ id, size, name }) => (
                 <Button
@@ -264,7 +264,7 @@ export function Product() {
             </div>
           </div>
           <div className="mb-4">
-            <span className="mb-2 block text-gray-700">Color:</span>
+            <span className="mb-2 block text-gray-700">Color</span>
             <div className="flex space-x-4">
               {product?.colors.map(({ id, hexCode, name }) => (
                 <Button

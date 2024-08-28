@@ -155,7 +155,7 @@ export function Cart() {
           <div>
             <div className="flex justify-between pb-3">
               <h3>Sub total</h3>
-              <span>RS {formatMoney(total)}</span>
+              <span>Rp {formatMoney(total)}</span>
             </div>
 
             <nav className="border-1 flex justify-between space-x-3 border-t py-4">
