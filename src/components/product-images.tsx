@@ -1,4 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
+
+import { Image } from './image'
 
 interface ProductImagesProps {
   images: {
@@ -15,18 +17,14 @@ export function ProductImages({ images }: ProductImagesProps) {
     title: string
     url: string
     productId: string
-  }>()
-
-  useEffect(() => {
-    setImageSelect(images[0])
-  }, [images])
+  }>(images[0])
 
   return (
     <>
       <div className="mx-auto flex flex-row  gap-4 p-4 md:flex-col  lg:mx-0 lg:w-1/6  lg:p-0">
         {images.map((image) => {
           return (
-            <img
+            <Image
               key={image.url}
               src={image.url}
               alt={image.title}
@@ -38,7 +36,7 @@ export function ProductImages({ images }: ProductImagesProps) {
       </div>
 
       <div className="mx-auto flex w-3/4 max-w-[300px] justify-center pl-4 sm:block md:max-w-[500px] lg:max-w-[800px]">
-        <img
+        <Image
           src={imageSelect?.url}
           alt={imageSelect?.title}
           className="h-auto w-full rounded-xl object-cover"

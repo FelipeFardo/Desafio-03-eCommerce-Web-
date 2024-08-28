@@ -17,6 +17,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from './cart-sheet'
+import { Image } from './image'
 
 export function Cart() {
   const { items, total } = useSelector((state: RootState) => state.cart)
@@ -81,7 +82,7 @@ export function Cart() {
                         )
                       }
                     >
-                      <img
+                      <Image
                         src={item.imageUrl}
                         width={100}
                         alt={item.name}

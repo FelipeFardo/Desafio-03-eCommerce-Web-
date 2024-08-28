@@ -72,7 +72,7 @@ export function CollectionProducts({
           {productVariant.isNew && !productVariant.discount && (
             <ProductCard.NewProduct />
           )}
-          <ProductCard.Image url={productVariant.image.url} alt="Imagem" />
+          <ProductCard.ImageCard url={productVariant.image.url} alt="Imagem" />
           <ProductCard.Content>
             <ProductCard.Title name={productVariant.product.name} />
             <div className="space-y-2">

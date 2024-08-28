@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { formatMoney } from '../utis/formatMoney'
 import { CompareIcon } from './icons/compare'
 import { HeartIcon } from './icons/heart'
+import { Image } from './image'
 
 interface TitleProps {
   name: string
@@ -47,13 +48,13 @@ export function Price({ priceInCents }: PriceProps) {
   return <span className="mr-10 text-lg font-semibold">Rp {priceInDolar}</span>
 }
 
-interface ImageProps {
+interface ImageCardProps {
   url: string
   alt?: string
 }
 
-export function Image({ alt, url }: ImageProps) {
-  return <img src={url} alt={alt} className="w-full" />
+export function ImageCard({ alt, url }: ImageCardProps) {
+  return <Image src={url} alt={alt} className="w-full" />
 }
 interface DescriptionProps {
   children: ReactNode

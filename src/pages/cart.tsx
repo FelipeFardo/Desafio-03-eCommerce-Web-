@@ -7,6 +7,7 @@ import bannerImage from '@/assets/images/banner.jpeg'
 import { removeFromCart, updateQuantity } from '@/cart/cart-slice'
 import type { RootState } from '@/cart/store'
 import * as Banner from '@/components/banner'
+import { Image } from '@/components/image'
 import { useAuth } from '@/contexts/useAuth'
 import { cn } from '@/lib/utils'
 import { formatMoney } from '@/utis/formatMoney'
@@ -80,7 +81,7 @@ export function CartPage() {
                     }}
                     className="flex w-20  space-x-4 lg:w-32"
                   >
-                    <img
+                    <Image
                       src={item.imageUrl}
                       alt={item.name}
                       className="hidden h-20 w-20 rounded-xl object-cover lg:block"
